@@ -19,170 +19,170 @@
 	var elMuted = document.querySelector('.js-muted');
 
 	mimicopy.initialize = function() {
-	addListeners(elDroppable, {
-		dragover: function(event) {
-			event.preventDefault();
-			elBody.classList.add('is-dragover');
-		},
+		addListeners(elDroppable, {
+			dragover: function(event) {
+				event.preventDefault();
+				elBody.classList.add('is-dragover');
+			},
 
-		dragleave: function(event) {
-			elBody.classList.remove('is-dragover');
-		},
+			dragleave: function(event) {
+				elBody.classList.remove('is-dragover');
+			},
 
-		drop: function(event) {
-			event.preventDefault();
-			elBody.classList.remove('is-dragover');
+			drop: function(event) {
+				event.preventDefault();
+				elBody.classList.remove('is-dragover');
 
-			var files = event.dataTransfer.files;
-			var html = map(files, function(file, index) {
-				var id = ++soundFileTable.length;
-				soundFileTable[id] = { id:id, file:file };
+				var files = event.dataTransfer.files;
+				var html = map(files, function(file, index) {
+					var id = ++soundFileTable.length;
+					soundFileTable[id] = { id:id, file:file };
 
-				var classNameText = 'soudList-item js-soudList-item';
-				if (elPlayer.canPlayType(file.type)) {
-					classNameText += ' is-supported';
+					var classNameText = 'soudList-item js-soudList-item';
+					if (elPlayer.canPlayType(file.type)) {
+						classNameText += ' is-supported';
+					}
+
+					var html = '<li>';
+					html += '<span class="' + classNameText + '" data-id="' + id + '">';
+					html += escape(file.name);
+					html += '</span></li>';
+					return html;
+				}).join('');
+				elSoundList.innerHTML += html;
+			}
+		});
+
+		addListeners(elSoundList, {
+			click: function(event) {
+				var el = event.target;
+				while (el && el.classList) {
+					if (el.classList.contains('js-soudList-item')) {
+						break;
+					}
+					else {
+						el = el.parentNode;
+					}
 				}
 
-				var html = '<li>';
-				html += '<span class="' + classNameText + '" data-id="' + id + '">';
-				html += escape(file.name);
-				html += '</span></li>';
-				return html;
-			}).join('');
-			elSoundList.innerHTML += html;
-		}
-	});
+				if (el && el.classList.contains('is-supported')) {
+					var id = el.getAttribute('data-id');
+					var file = soundFileTable[id].file;
+					setupPlayer(file);
+				}
+			}
+		});
 
-	addListeners(elSoundList, {
-		click: function(event) {
-			var el = event.target;
-			while (el && el.classList) {
-				if (el.classList.contains('js-soudList-item')) {
-					break;
+		addListeners(elPlayer, {
+			error: function(event) {
+				elPlay.disabled = true;
+				elPause.disabled = true;
+			},
+
+			canplay: function(event) {
+				elVolume.value = this.volume;
+				elMuted.checked = this.muted;
+				elVolume.disabled = elMuted.disabled = false;
+				this.play();
+			},
+
+			play: function(event) {
+				elPlay.disabled = true;
+				elPause.disabled = false;
+			},
+
+			pause: function(event) {
+				elPlay.disabled = false;
+				elPause.disabled = true;
+			},
+
+			volumechange: function(event) {
+				elVolume.value = this.volume;
+				elMuted.checked = this.muted;
+			},
+
+			durationchange: function(event) {
+				var value = this.duration;
+				if (value === Infinity) {
+					elCurrentTime.max = elTimeFrom.max = elTimeTo.max = 3600;
+					elDurationText.innerHTML = '-:--.---';
+					console.warn('Your browser does not support audio duration.');
 				}
 				else {
-					el = el.parentNode;
+					elCurrentTime.max = elTimeFrom.max = elTimeTo.max = value;
+					elDurationText.setTime(value);
+				}
+				elTimeFrom.value = 0;
+				elTimeTo.value = elTimeTo.max;
+			},
+
+			timeupdate: function(event) {
+				var value = this.currentTime;
+				var to = Number(elTimeTo.value);
+				if (value > to) {
+					var from = Number(elTimeFrom.value);
+					elPlayer.currentTime = from;
+				}
+				else {
+					elCurrentTime.value = value;
+					elCurrentTimeText.setTime(value);
 				}
 			}
+		});
 
-			if (el && el.classList.contains('is-supported')) {
-				var id = el.getAttribute('data-id');
-				var file = soundFileTable[id].file;
-				setupPlayer(file);
-			}
-		}
-	});
-
-	addListeners(elPlayer, {
-		error: function(event) {
-			elPlay.disabled = true;
-			elPause.disabled = true;
-		},
-
-		canplay: function(event) {
-			elVolume.value = this.volume;
-			elMuted.checked = this.muted;
-			elVolume.disabled = elMuted.disabled = false;
-			this.play();
-		},
-
-		play: function(event) {
-			elPlay.disabled = true;
-			elPause.disabled = false;
-		},
-
-		pause: function(event) {
-			elPlay.disabled = false;
-			elPause.disabled = true;
-		},
-
-		volumechange: function(event) {
-			elVolume.value = this.volume;
-			elMuted.checked = this.muted;
-		},
-
-		durationchange: function(event) {
-			var value = this.duration;
-			if (value === Infinity) {
-				elCurrentTime.max = elTimeFrom.max = elTimeTo.max = 3600;
-				elDurationText.innerHTML = '-:--.---';
-				console.warn('Your browser does not support audio duration.');
-			}
-			else {
-				elCurrentTime.max = elTimeFrom.max = elTimeTo.max = value;
-				elDurationText.setTime(value);
-			}
-			elTimeFrom.value = 0;
-			elTimeTo.value = elTimeTo.max;
-		},
-
-		timeupdate: function(event) {
-			var value = this.currentTime;
+		elPlay.addEventListener('click', function(event) {
+			var currentTime = elPlayer.currentTime;
+			var from = Number(elTimeFrom.value);
 			var to = Number(elTimeTo.value);
-			if (value > to) {
-				var from = Number(elTimeFrom.value);
+			if (currentTime < from || to < currentTime) {
 				elPlayer.currentTime = from;
 			}
-			else {
-				elCurrentTime.value = value;
-				elCurrentTimeText.setTime(value);
+			elPlayer.play();
+		});
+
+		elPause.addEventListener('click', function(event) {
+			elPlayer.pause();
+		});
+
+		elCurrentTime.addEventListener('change', function(event) {
+			elPlayer.currentTime = this.value;
+		});
+
+		elTimeFrom.addEventListener('change', function(event) {
+			var from = Number(elTimeFrom.value);
+			var to = Number(elTimeTo.value);
+			if (from > to) {
+				elTimeTo.value = from;
 			}
-		}
-	});
 
-	elPlay.addEventListener('click', function(event) {
-		var currentTime = elPlayer.currentTime;
-		var from = Number(elTimeFrom.value);
-		var to = Number(elTimeTo.value);
-		if (currentTime < from || to < currentTime) {
-			elPlayer.currentTime = from;
-		}
-		elPlayer.play();
-	});
+			if (elPlayer.currentTime < from) {
+				elPlayer.currentTime = from;
+			}
+		});
 
-	elPause.addEventListener('click', function(event) {
-		elPlayer.pause();
-	});
+		elTimeTo.addEventListener('change', function(event) {
+			var from = Number(elTimeFrom.value);
+			var to = Number(elTimeTo.value);
+			if (from > to) {
+				elTimeFrom.value = to;
+			}
+		});
 
-	elCurrentTime.addEventListener('change', function(event) {
-		elPlayer.currentTime = this.value;
-	});
+		elVolume.addEventListener('change', function(event) {
+			elPlayer.volume = this.value;
+		});
 
-	elTimeFrom.addEventListener('change', function(event) {
-		var from = Number(elTimeFrom.value);
-		var to = Number(elTimeTo.value);
-		if (from > to) {
-			elTimeTo.value = from;
-		}
+		elMuted.addEventListener('change', function(event) {
+			elPlayer.muted = this.checked;
+		});
 
-		if (elPlayer.currentTime < from) {
-			elPlayer.currentTime = from;
-		}
-	});
-
-	elTimeTo.addEventListener('change', function(event) {
-		var from = Number(elTimeFrom.value);
-		var to = Number(elTimeTo.value);
-		if (from > to) {
-			elTimeFrom.value = to;
-		}
-	});
-
-	elVolume.addEventListener('change', function(event) {
-		elPlayer.volume = this.value;
-	});
-
-	elMuted.addEventListener('change', function(event) {
-		elPlayer.muted = this.checked;
-	});
-
-	elCurrentTimeText.setTime = elDurationText.setTime = function(time) {
-		var min = parseInt(time/60, 10);
-		var sec = ('0' + parseInt(time%60, 10)).slice(-2);
-		var msec = ('000' + (time - parseInt(time, 10))).slice(-3);
-		var text = min + ':' + sec + '.' + msec;
-		this.innerHTML = text;
-	};
+		elCurrentTimeText.setTime = elDurationText.setTime = function(time) {
+			var min = parseInt(time/60, 10);
+			var sec = ('0' + parseInt(time%60, 10)).slice(-2);
+			var msec = ('000' + (time - parseInt(time, 10))).slice(-3);
+			var text = min + ':' + sec + '.' + msec;
+			this.innerHTML = text;
+		};
 	};
 
 	function setupPlayer(file) {
