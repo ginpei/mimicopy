@@ -151,6 +151,10 @@
 		if (from > to) {
 			elTimeTo.value = from;
 		}
+
+		if (elPlayer.currentTime < from) {
+			elPlayer.currentTime = from;
+		}
 	});
 
 	elTimeTo.addEventListener('change', function(event) {
