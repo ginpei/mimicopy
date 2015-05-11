@@ -1,5 +1,6 @@
 (function() {
 	var soundFileTable = { length:0 };
+	var reader = new FileReader();
 
 	var elBody = document.body;
 	var elDroppable = document.querySelector('html');
@@ -10,7 +11,6 @@
 	var elCurrentTime = document.querySelector('.js-currentTime');
 	var elCurrentTimeText = document.querySelector('.js-currentTimeText');
 	var elDurationText = document.querySelector('.js-durationText');
-	var reader = new FileReader();
 
 	addListeners(elDroppable, {
 		dragover: function(event) {
