@@ -23,7 +23,6 @@
 			html += '</li>';
 			return html;
 		}).join('');
-		console.log(files, html);
 		elSoundList.innerHTML += html;
 	});
 
