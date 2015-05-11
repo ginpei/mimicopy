@@ -11,7 +11,7 @@ body.is-dragover {
 .player {
 	text-align: center;
 }
-.player-currentTime {
+.player-time {
 	box-sizing: border-box;
 	display: block;
 	margin: auto;

@@ -9,6 +9,8 @@
 	var elPlay = document.querySelector('.js-play');
 	var elPause = document.querySelector('.js-pause');
 	var elCurrentTime = document.querySelector('.js-currentTime');
+	var elTimeFrom = document.querySelector('.js-timeFrom');
+	var elTimeTo = document.querySelector('.js-timeTo');
 	var elCurrentTimeText = document.querySelector('.js-currentTimeText');
 	var elDurationText = document.querySelector('.js-durationText');
 
@@ -89,24 +91,39 @@
 		durationchange: function(event) {
 			var value = this.duration;
 			if (value === Infinity) {
-				elCurrentTime.max = 3600;
+				elCurrentTime.max = elTimeFrom.max = elTimeTo.max = 3600;
 				elDurationText.innerHTML = '-:--.---';
 				console.warn('Your browser does not support audio duration.');
 			}
 			else {
-				elCurrentTime.max = value;
+				elCurrentTime.max = elTimeFrom.max = elTimeTo.max = value;
 				elDurationText.setTime(value);
 			}
+			elTimeFrom.value = 0;
+			elTimeTo.value = elTimeTo.max;
 		},
 
 		timeupdate: function(event) {
 			var value = this.currentTime;
-			elCurrentTime.value = value;
-			elCurrentTimeText.setTime(value);
+			var to = Number(elTimeTo.value);
+			if (value > to) {
+				var from = Number(elTimeFrom.value);
+				elPlayer.currentTime = from;
+			}
+			else {
+				elCurrentTime.value = value;
+				elCurrentTimeText.setTime(value);
+			}
 		}
 	});
 
 	elPlay.addEventListener('click', function(event) {
+		var currentTime = elPlayer.currentTime;
+		var from = Number(elTimeFrom.value);
+		var to = Number(elTimeTo.value);
+		if (currentTime < from || to < currentTime) {
+			elPlayer.currentTime = from;
+		}
 		elPlayer.play();
 	});
 
@@ -116,6 +133,22 @@
 
 	elCurrentTime.addEventListener('change', function(event) {
 		elPlayer.currentTime = this.value;
+	});
+
+	elTimeFrom.addEventListener('change', function(event) {
+		var from = Number(elTimeFrom.value);
+		var to = Number(elTimeTo.value);
+		if (from > to) {
+			elTimeTo.value = from;
+		}
+	});
+
+	elTimeTo.addEventListener('change', function(event) {
+		var from = Number(elTimeFrom.value);
+		var to = Number(elTimeTo.value);
+		if (from > to) {
+			elTimeFrom.value = to;
+		}
 	});
 
 	elCurrentTimeText.setTime = elDurationText.setTime = function(time) {
