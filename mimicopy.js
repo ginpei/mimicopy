@@ -4,6 +4,8 @@
 	var elBody = document.body;
 	var elDroppable = document.querySelector('html');
 	var elSoundList = document.querySelector('.js-soundList');
+	var elPlayer = document.querySelector('.js-player');
+	var reader = new FileReader();
 
 	elDroppable.addEventListener('dragover', function(event) {
 		event.preventDefault();
@@ -49,9 +51,26 @@
 		if (el) {
 			var id = el.getAttribute('data-id');
 			var file = soundFileTable[id].file;
-			console.log(file.name);
+			setupPlayer(file);
 		}
 	});
+
+	function setupPlayer(file) {
+		reader.onload = function(event) {
+			load(event.target.result);
+		};
+		reader.readAsDataURL(file);
+	};
+
+	function load(src) {
+		elPlayer.oncanplay = function(event) { play(); };
+		elPlayer.onerror = function(event) { console.log(arguments); };
+		elPlayer.src = src;
+	}
+
+	function play() {
+		elPlayer.play();
+	}
 
 	function map(array, callback) {
 		return Array.prototype.map.call(array, callback);
