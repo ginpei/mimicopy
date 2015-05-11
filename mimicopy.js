@@ -13,6 +13,8 @@
 	var elTimeTo = document.querySelector('.js-timeTo');
 	var elCurrentTimeText = document.querySelector('.js-currentTimeText');
 	var elDurationText = document.querySelector('.js-durationText');
+	var elVolume = document.querySelector('.js-volume');
+	var elMuted = document.querySelector('.js-muted');
 
 	addListeners(elDroppable, {
 		dragover: function(event) {
@@ -75,6 +77,9 @@
 		},
 
 		canplay: function(event) {
+			elVolume.value = this.volume;
+			elMuted.checked = this.muted;
+			elVolume.disabled = elMuted.disabled = false;
 			this.play();
 		},
 
@@ -86,6 +91,11 @@
 		pause: function(event) {
 			elPlay.disabled = false;
 			elPause.disabled = true;
+		},
+
+		volumechange: function(event) {
+			elVolume.value = this.volume;
+			elMuted.checked = this.muted;
 		},
 
 		durationchange: function(event) {
@@ -149,6 +159,14 @@
 		if (from > to) {
 			elTimeFrom.value = to;
 		}
+	});
+
+	elVolume.addEventListener('change', function(event) {
+		elPlayer.volume = this.value;
+	});
+
+	elMuted.addEventListener('change', function(event) {
+		elPlayer.muted = this.checked;
 	});
 
 	elCurrentTimeText.setTime = elDurationText.setTime = function(time) {
