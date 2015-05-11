@@ -5,6 +5,11 @@
 	var elDroppable = document.querySelector('html');
 	var elSoundList = document.querySelector('.js-soundList');
 	var elPlayer = document.querySelector('.js-player');
+	var elPlay = document.querySelector('.js-play');
+	var elPause = document.querySelector('.js-pause');
+	var elCurrentTime = document.querySelector('.js-currentTime');
+	var elCurrentTimeText = document.querySelector('.js-currentTimeText');
+	var elDurationText = document.querySelector('.js-durationText');
 	var reader = new FileReader();
 
 	elDroppable.addEventListener('dragover', function(event) {
@@ -55,6 +60,63 @@
 		}
 	});
 
+	elPlayer.addEventListener('error', function(event) {
+		elPlay.disabled = true;
+		elPause.disabled = true;
+	});
+
+	elPlayer.addEventListener('canplay', function(event) {
+		this.play();
+	});
+
+	elPlayer.addEventListener('play', function(event) {
+		elPlay.disabled = true;
+		elPause.disabled = false;
+	});
+
+	elPlayer.addEventListener('pause', function(event) {
+		elPlay.disabled = false;
+		elPause.disabled = true;
+	});
+
+	elPlayer.addEventListener('durationchange', function(event) {
+		var value = this.duration;
+		if (value === Infinity) {
+			elCurrentTime.max = 3600;
+			elDurationText.innerHTML = '-:--';
+			console.warn('Your browser does not support audio duration.');
+		}
+		else {
+			elCurrentTime.max = value;
+			elDurationText.setTime(value);
+		}
+	});
+
+	elPlayer.addEventListener('timeupdate', function(event) {
+		var value = this.currentTime;
+		elCurrentTime.value = value;
+		elCurrentTimeText.setTime(value);
+	});
+
+	elPlay.addEventListener('click', function(event) {
+		elPlayer.play();
+	});
+
+	elPause.addEventListener('click', function(event) {
+		elPlayer.pause();
+	});
+
+	elCurrentTime.addEventListener('change', function(event) {
+		elPlayer.currentTime = this.value;
+	});
+
+	elCurrentTimeText.setTime = elDurationText.setTime = function(time) {
+		var min = parseInt(time/60, 10);
+		var sec = ('0' + parseInt(time%60, 10)).slice(-2);
+		var text = min + ':' + sec;
+		this.innerHTML = text;
+	};
+
 	function setupPlayer(file) {
 		reader.onload = function(event) {
 			load(event.target.result);
@@ -63,13 +125,8 @@
 	};
 
 	function load(src) {
-		elPlayer.oncanplay = function(event) { play(); };
 		elPlayer.onerror = function(event) { console.log(arguments); };
 		elPlayer.src = src;
-	}
-
-	function play() {
-		elPlayer.play();
 	}
 
 	function map(array, callback) {
