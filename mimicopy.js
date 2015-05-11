@@ -41,6 +41,9 @@
 			if (el.classList.contains('js-soudList-item')) {
 				break;
 			}
+			else {
+				el = el.parentNode;
+			}
 		}
 
 		if (el) {
