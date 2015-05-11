@@ -20,6 +20,10 @@
 
 		var files = event.dataTransfer.files;
 		var html = map(files, function(file, index) {
+			if (file.type.indexOf('audio/') !== 0) {
+				return '';
+			}
+
 			var id = ++soundFileTable.length;
 			soundFileTable[id] = { id:id, file:file };
 
