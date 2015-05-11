@@ -90,7 +90,7 @@
 			var value = this.duration;
 			if (value === Infinity) {
 				elCurrentTime.max = 3600;
-				elDurationText.innerHTML = '-:--';
+				elDurationText.innerHTML = '-:--.---';
 				console.warn('Your browser does not support audio duration.');
 			}
 			else {
@@ -121,7 +121,8 @@
 	elCurrentTimeText.setTime = elDurationText.setTime = function(time) {
 		var min = parseInt(time/60, 10);
 		var sec = ('0' + parseInt(time%60, 10)).slice(-2);
-		var text = min + ':' + sec;
+		var msec = ('000' + (time - parseInt(time, 10))).slice(-3);
+		var text = min + ':' + sec + '.' + msec;
 		this.innerHTML = text;
 	};
 
