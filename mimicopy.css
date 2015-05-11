@@ -7,6 +7,17 @@ body.is-dragover {
 	border-radius: 4px;
 	padding: 0.5em;
 }
+
+.player {
+	text-align: center;
+}
+.player-currentTime {
+	box-sizing: border-box;
+	display: block;
+	margin: auto;
+	width: 90%;
+}
+
 .soudList-item.is-supported {
 	cursor: pointer;
 }
