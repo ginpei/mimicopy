@@ -27,14 +27,16 @@
 
 		var files = event.dataTransfer.files;
 		var html = map(files, function(file, index) {
-			if (file.type.indexOf('audio/') !== 0) {
-				return '';
-			}
-
 			var id = ++soundFileTable.length;
 			soundFileTable[id] = { id:id, file:file };
 
-			var html = '<li><span class="soudList-item js-soudList-item" data-id="' + id + '">';
+			var classNameText = 'soudList-item js-soudList-item';
+			if (elPlayer.canPlayType(file.type)) {
+				classNameText += ' is-supported';
+			}
+
+			var html = '<li>';
+			html += '<span class="' + classNameText + '" data-id="' + id + '">';
 			html += escape(file.name);
 			html += '</span></li>';
 			return html;
@@ -53,7 +55,7 @@
 			}
 		}
 
-		if (el) {
+		if (el && el.classList.contains('is-supported')) {
 			var id = el.getAttribute('data-id');
 			var file = soundFileTable[id].file;
 			setupPlayer(file);

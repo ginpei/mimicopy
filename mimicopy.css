@@ -7,9 +7,13 @@ body.is-dragover {
 	border-radius: 4px;
 	padding: 0.5em;
 }
-.soudList-item {
+.soudList-item.is-supported {
 	cursor: pointer;
 }
-.soudList-item:hover {
+.soudList-item:not(.is-supported) {
+	color: #999;
+	cursor: default;
+}
+.soudList-item.is-supported:hover {
 	text-decoration: underline;
 }
