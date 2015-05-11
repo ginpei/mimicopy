@@ -1,4 +1,6 @@
 (function() {
+	var soundFileTable = { length:0 };
+
 	var elBody = document.body;
 	var elDroppable = document.querySelector('html');
 	var elSoundList = document.querySelector('.js-soundList');
@@ -18,12 +20,30 @@
 
 		var files = event.dataTransfer.files;
 		var html = map(files, function(file, index) {
-			var html = '<li>';
+			var id = ++soundFileTable.length;
+			soundFileTable[id] = { id:id, file:file };
+
+			var html = '<li><span class="soudList-item js-soudList-item" data-id="' + id + '">';
 			html += escape(file.name);
-			html += '</li>';
+			html += '</span></li>';
 			return html;
 		}).join('');
 		elSoundList.innerHTML += html;
+	});
+
+	elSoundList.addEventListener('click', function(event) {
+		var el = event.target;
+		while (el) {
+			if (el.classList.contains('js-soudList-item')) {
+				break;
+			}
+		}
+
+		if (el) {
+			var id = el.getAttribute('data-id');
+			var file = soundFileTable[id].file;
+			console.log(file.name);
+		}
 	});
 
 	function map(array, callback) {
