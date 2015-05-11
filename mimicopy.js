@@ -119,15 +119,10 @@
 
 	function setupPlayer(file) {
 		reader.onload = function(event) {
-			load(event.target.result);
+			elPlayer.src = event.target.result;
 		};
 		reader.readAsDataURL(file);
 	};
-
-	function load(src) {
-		elPlayer.onerror = function(event) { console.log(arguments); };
-		elPlayer.src = src;
-	}
 
 	function map(array, callback) {
 		return Array.prototype.map.call(array, callback);
