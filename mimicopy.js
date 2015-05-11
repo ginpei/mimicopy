@@ -1,4 +1,6 @@
 (function() {
+	var mimicopy = window.mimicopy = {};
+
 	var soundFileTable = { length:0 };
 	var reader = new FileReader();
 
@@ -16,6 +18,7 @@
 	var elVolume = document.querySelector('.js-volume');
 	var elMuted = document.querySelector('.js-muted');
 
+	mimicopy.initialize = function() {
 	addListeners(elDroppable, {
 		dragover: function(event) {
 			event.preventDefault();
@@ -180,6 +183,7 @@
 		var text = min + ':' + sec + '.' + msec;
 		this.innerHTML = text;
 	};
+	};
 
 	function setupPlayer(file) {
 		reader.onload = function(event) {
@@ -208,4 +212,8 @@
 			el.addEventListener(type, listeners[type]);
 		}
 	}
+
+	document.addEventListener('DOMContentLoaded', function(event) {
+		mimicopy.initialize();
+	});
 })();

@@ -1,4 +1,8 @@
-describe('Test', function() {
-	it('is working!', function() {
+var mimicopy = window.mimicopy;
+
+mimicopy.initialize = function() { };
+
+describe('Mimicopy', function() {
+	it('exists', function() {
 	});
 });

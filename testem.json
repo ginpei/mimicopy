@@ -1,6 +1,7 @@
 {
 	"framework": "jasmine",
 	"src_files": [
+		"mimicopy.js",
 		"test/test.js"
 	]
 }
