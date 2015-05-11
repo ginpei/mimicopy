@@ -44,7 +44,7 @@
 
 	elSoundList.addEventListener('click', function(event) {
 		var el = event.target;
-		while (el) {
+		while (el && el.classList) {
 			if (el.classList.contains('js-soudList-item')) {
 				break;
 			}
