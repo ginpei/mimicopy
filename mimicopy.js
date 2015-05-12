@@ -39,7 +39,7 @@
 						html += '</span></li>';
 						return html;
 					}).join('');
-					elSoundList.innerHTML += html;
+					this.els.soundList.innerHTML += html;
 				}
 			}
 		},
@@ -69,10 +69,34 @@
 		}
 	};
 
+	mimicopy.elementConnections.soundList = {
+		selector: '.js-soundList',
+
+		click: function(event) {
+			var el = event.target;
+			while (el) {
+				if (el.classList.contains('js-soudList-item')) {
+					break;
+				}
+				else {
+					el = el.parentNode;
+					if (!el.classList) {
+						el = null;
+					}
+				}
+			}
+
+			if (el && el.classList.contains('is-supported')) {
+				var id = el.getAttribute('data-id');
+				var file = soundFileTable[id].file;
+				setupPlayer(file);
+			}
+		}
+	};
+
 	var soundFileTable = { length:0 };
 	var reader = new FileReader();
 
-	var elSoundList = document.querySelector('.js-soundList');
 	var elPlayer = document.querySelector('.js-player');
 	var elPlay = document.querySelector('.js-play');
 	var elPause = document.querySelector('.js-pause');
@@ -85,29 +109,6 @@
 	var elMuted = document.querySelector('.js-muted');
 
 	mimicopy.initialize2 = function() {
-		addListeners(elSoundList, {
-			click: function(event) {
-				var el = event.target;
-				while (el) {
-					if (el.classList.contains('js-soudList-item')) {
-						break;
-					}
-					else {
-						el = el.parentNode;
-						if (!el.classList) {
-							el = null;
-						}
-					}
-				}
-
-				if (el && el.classList.contains('is-supported')) {
-					var id = el.getAttribute('data-id');
-					var file = soundFileTable[id].file;
-					setupPlayer(file);
-				}
-			}
-		});
-
 		addListeners(elPlayer, {
 			error: function(event) {
 				elPlay.disabled = true;
