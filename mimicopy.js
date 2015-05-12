@@ -1,5 +1,9 @@
 (function() {
 	var mimicopy = window.mimicopy = {
+		initialize: function() {
+			this.initialize2();
+		},
+
 		_connectToElements: function(elements) {
 			var elRoot = this.el || document;
 			var els = this.els = {};
@@ -41,7 +45,7 @@
 	var elVolume = document.querySelector('.js-volume');
 	var elMuted = document.querySelector('.js-muted');
 
-	mimicopy.initialize = function() {
+	mimicopy.initialize2 = function() {
 		addListeners(elDroppable, {
 			dragover: function(event) {
 				event.preventDefault();
