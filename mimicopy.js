@@ -13,6 +13,7 @@
 			this.reader.onload = function(event) {
 				this.file = file;
 				this.player.src = event.target.result;
+				this.load();
 			}.bind(this);
 			this.reader.readAsDataURL(file);
 		},
@@ -28,12 +29,12 @@
 		load: function() {
 			var recipe = this.settings.getRecipe(this.file);
 			if (recipe) {
-				this.player.currentTime = recipe.from;
 				this.els.timeFrom.value = recipe.from;
 				this.els.timeTo.value = recipe.to;
 			}
 			else {
-				alert('No data.');
+				this.els.timeFrom.value = 0;
+				this.els.timeTo.value = this.player.duration;
 			}
 		},
 
@@ -157,10 +158,6 @@
 					if (from > to) {
 						this.els.timeTo.value = from;
 					}
-
-					if (this.player.currentTime < from) {
-						this.player.currentTime = from;
-					}
 				},
 			},
 
@@ -240,6 +237,7 @@
 					this.els.muted.checked = this.player.muted;
 					this.els.volume.disabled = this.els.muted.disabled = false;
 					this.els.save.disabled = this.els.load.disabled = false;
+
 					this.player.play();
 				},
 
@@ -269,20 +267,21 @@
 						this.els.currentTime.max = this.els.timeFrom.max = this.els.timeTo.max = value;
 						this.els.durationText.setTime(value);
 					}
-					this.els.timeFrom.value = 0;
-					this.els.timeTo.value = this.els.timeTo.max;
 				},
 
 				timeupdate: function(event) {
-					var value = this.player.currentTime;
+					var currentTime = this.player.currentTime;
+					var from = Number(this.els.timeFrom.value);
 					var to = Number(this.els.timeTo.value);
-					if (value > to) {
-						var from = Number(this.els.timeFrom.value);
+					if (currentTime < from) {
+						this.player.currentTime = from;
+					}
+					else if (currentTime > to) {
 						this.player.currentTime = from;
 					}
 					else {
-						this.els.currentTime.value = value;
-						this.els.currentTimeText.setTime(value);
+						this.els.currentTime.value = currentTime;
+						this.els.currentTimeText.setTime(currentTime);
 					}
 				}
 			},
