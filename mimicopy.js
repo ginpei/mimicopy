@@ -60,6 +60,7 @@
 						}
 						if (type === 'initialize') {
 							data[type].call(this, el);
+							continue;
 						}
 						el.addEventListener(type, data[type].bind(this));
 					}
