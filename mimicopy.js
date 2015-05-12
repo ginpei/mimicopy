@@ -2,17 +2,39 @@
 	var mimicopy = window.mimicopy = {
 		initialize: function() {
 			this.soundFileTable = { length:0 };
-
 			this.reader = new FileReader();
-			this.reader.onload = function(event) {
-				this.player.src = event.target.result;
-			}.bind(this);
+			this.settings.initialize();
 
 			this._connectToElements(this.elementConnections);
 		},
 
 		setupPlayer: function(file) {
+			this.file = null;
+			this.reader.onload = function(event) {
+				this.file = file;
+				this.player.src = event.target.result;
+			}.bind(this);
 			this.reader.readAsDataURL(file);
+		},
+
+		save: function() {
+			this.settings.addRecipe({
+				file: this.file,
+				from: this.els.timeFrom.value,
+				to: this.els.timeTo.value
+			});
+		},
+
+		load: function() {
+			var recipe = this.settings.getRecipe(this.file);
+			if (recipe) {
+				this.player.currentTime = recipe.from;
+				this.els.timeFrom.value = recipe.from;
+				this.els.timeTo.value = recipe.to;
+			}
+			else {
+				alert('No data.');
+			}
 		},
 
 		map: function(array, callback) {
@@ -217,6 +239,7 @@
 					this.els.volume.value = this.player.volume;
 					this.els.muted.checked = this.player.muted;
 					this.els.volume.disabled = this.els.muted.disabled = false;
+					this.els.save.disabled = this.els.load.disabled = false;
 					this.player.play();
 				},
 
@@ -262,13 +285,44 @@
 						this.els.currentTimeText.setTime(value);
 					}
 				}
+			},
+
+			save: {
+				selector: '.js-save',
+				click: function(event) {
+					this.save();
+				}
+			},
+
+			load: {
+				selector: '.js-load',
+				click: function(event) {
+					this.load();
+				}
 			}
 		}
 	};
 
 	var settings = mimicopy.settings = {
 		initialize: function() {
-			this.recipes = {};
+			this.recipes = this._buildRecipes();
+		},
+
+		_buildRecipes: function() {
+			var storage;
+			var data = window.localStorage.mimicopy;
+			if (data) {
+				storage = JSON.parse(data);
+			}
+			else {
+				storage = {};
+			}
+			return storage;
+		},
+
+		_saveRacipes: function(storage) {
+			var data = JSON.stringify(storage);
+			window.localStorage.mimicopy = data;
 		},
 
 		addRecipe: function(settings) {
@@ -277,6 +331,7 @@
 				from: settings.from,
 				to: settings.to
 			};
+			this._saveRacipes(this.recipes);
 		},
 
 		getRecipe: function(file) {
