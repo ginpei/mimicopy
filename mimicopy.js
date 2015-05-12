@@ -2,15 +2,16 @@
 	var mimicopy = window.mimicopy = {
 		initialize: function() {
 			this.soundFileTable = { length:0 };
+
 			this.reader = new FileReader();
+			this.reader.onload = function(event) {
+				this.player.src = event.target.result;
+			}.bind(this);
 
 			this._connectToElements(this.elementConnections);
 		},
 
 		setupPlayer: function(file) {
-			this.reader.onload = function(event) {
-				this.player.src = event.target.result;
-			}.bind(this);
 			this.reader.readAsDataURL(file);
 		},
 
