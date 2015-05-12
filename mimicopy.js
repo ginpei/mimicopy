@@ -6,20 +6,22 @@
 		},
 
 		elementConnections: {
+			'body': 'body',
+
 			'droppable': {
 				selector: 'html',
 				dragover: function(event) {
 					event.preventDefault();
-					elBody.classList.add('is-dragover');
+					this.els.body.classList.add('is-dragover');
 				},
 
 				dragleave: function(event) {
-					elBody.classList.remove('is-dragover');
+					this.els.body.classList.remove('is-dragover');
 				},
 
 				drop: function(event) {
 					event.preventDefault();
-					elBody.classList.remove('is-dragover');
+					this.els.body.classList.remove('is-dragover');
 
 					var files = event.dataTransfer.files;
 					var html = map(files, function(file, index) {
@@ -69,7 +71,6 @@
 	var soundFileTable = { length:0 };
 	var reader = new FileReader();
 
-	var elBody = document.body;
 	var elSoundList = document.querySelector('.js-soundList');
 	var elPlayer = document.querySelector('.js-player');
 	var elPlay = document.querySelector('.js-play');
