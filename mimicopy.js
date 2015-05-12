@@ -29,7 +29,7 @@
 						soundFileTable[id] = { id:id, file:file };
 
 						var classNameText = 'soundList-item js-soundList-item';
-						if (elPlayer.canPlayType(file.type)) {
+						if (this.player.canPlayType(file.type)) {
 							classNameText += ' is-supported';
 						}
 
@@ -38,7 +38,7 @@
 						html += escape(file.name);
 						html += '</span></li>';
 						return html;
-					}).join('');
+					}.bind(this)).join('');
 					this.els.soundList.innerHTML += html;
 				}
 			}
@@ -94,10 +94,72 @@
 		}
 	};
 
+	mimicopy.elementConnections.player = {
+		selector: '.js-player',
+
+		initialize: function(el) {
+			this.player = el;
+		},
+
+		error: function(event) {
+			elPlay.disabled = true;
+			elPause.disabled = true;
+		},
+
+		canplay: function(event) {
+			elVolume.value = this.player.volume;
+			elMuted.checked = this.player.muted;
+			elVolume.disabled = elMuted.disabled = false;
+			mimicopy.player.play();
+		},
+
+		play: function(event) {
+			elPlay.disabled = true;
+			elPause.disabled = false;
+		},
+
+		pause: function(event) {
+			elPlay.disabled = false;
+			elPause.disabled = true;
+		},
+
+		volumechange: function(event) {
+			elVolume.value = this.player.volume;
+			elMuted.checked = this.player.muted;
+		},
+
+		durationchange: function(event) {
+			var value = this.player.duration;
+			if (value === Infinity) {
+				elCurrentTime.max = elTimeFrom.max = elTimeTo.max = 3600;
+				elDurationText.innerHTML = '-:--.---';
+				console.warn('Your browser does not support audio duration.');
+			}
+			else {
+				elCurrentTime.max = elTimeFrom.max = elTimeTo.max = value;
+				elDurationText.setTime(value);
+			}
+			elTimeFrom.value = 0;
+			elTimeTo.value = elTimeTo.max;
+		},
+
+		timeupdate: function(event) {
+			var value = this.player.currentTime;
+			var to = Number(elTimeTo.value);
+			if (value > to) {
+				var from = Number(elTimeFrom.value);
+				this.player.currentTime = from;
+			}
+			else {
+				elCurrentTime.value = value;
+				elCurrentTimeText.setTime(value);
+			}
+		}
+	};
+
 	var soundFileTable = { length:0 };
 	var reader = new FileReader();
 
-	var elPlayer = document.querySelector('.js-player');
 	var elPlay = document.querySelector('.js-play');
 	var elPause = document.querySelector('.js-pause');
 	var elCurrentTime = document.querySelector('.js-currentTime');
@@ -109,79 +171,23 @@
 	var elMuted = document.querySelector('.js-muted');
 
 	mimicopy.initialize2 = function() {
-		addListeners(elPlayer, {
-			error: function(event) {
-				elPlay.disabled = true;
-				elPause.disabled = true;
-			},
-
-			canplay: function(event) {
-				elVolume.value = this.volume;
-				elMuted.checked = this.muted;
-				elVolume.disabled = elMuted.disabled = false;
-				this.play();
-			},
-
-			play: function(event) {
-				elPlay.disabled = true;
-				elPause.disabled = false;
-			},
-
-			pause: function(event) {
-				elPlay.disabled = false;
-				elPause.disabled = true;
-			},
-
-			volumechange: function(event) {
-				elVolume.value = this.volume;
-				elMuted.checked = this.muted;
-			},
-
-			durationchange: function(event) {
-				var value = this.duration;
-				if (value === Infinity) {
-					elCurrentTime.max = elTimeFrom.max = elTimeTo.max = 3600;
-					elDurationText.innerHTML = '-:--.---';
-					console.warn('Your browser does not support audio duration.');
-				}
-				else {
-					elCurrentTime.max = elTimeFrom.max = elTimeTo.max = value;
-					elDurationText.setTime(value);
-				}
-				elTimeFrom.value = 0;
-				elTimeTo.value = elTimeTo.max;
-			},
-
-			timeupdate: function(event) {
-				var value = this.currentTime;
-				var to = Number(elTimeTo.value);
-				if (value > to) {
-					var from = Number(elTimeFrom.value);
-					elPlayer.currentTime = from;
-				}
-				else {
-					elCurrentTime.value = value;
-					elCurrentTimeText.setTime(value);
-				}
-			}
-		});
 
 		elPlay.addEventListener('click', function(event) {
-			var currentTime = elPlayer.currentTime;
+			var currentTime = mimicopy.player.currentTime;
 			var from = Number(elTimeFrom.value);
 			var to = Number(elTimeTo.value);
 			if (currentTime < from || to < currentTime) {
-				elPlayer.currentTime = from;
+				mimicopy.player.currentTime = from;
 			}
-			elPlayer.play();
+			mimicopy.player.play();
 		});
 
 		elPause.addEventListener('click', function(event) {
-			elPlayer.pause();
+			mimicopy.player.pause();
 		});
 
 		elCurrentTime.addEventListener('change', function(event) {
-			elPlayer.currentTime = this.value;
+			mimicopy.player.currentTime = this.value;
 		});
 
 		elTimeFrom.addEventListener('change', function(event) {
@@ -191,8 +197,8 @@
 				elTimeTo.value = from;
 			}
 
-			if (elPlayer.currentTime < from) {
-				elPlayer.currentTime = from;
+			if (mimicopy.player.currentTime < from) {
+				mimicopy.player.currentTime = from;
 			}
 		});
 
@@ -205,11 +211,11 @@
 		});
 
 		elVolume.addEventListener('change', function(event) {
-			elPlayer.volume = this.value;
+			mimicopy.player.volume = this.value;
 		});
 
 		elMuted.addEventListener('change', function(event) {
-			elPlayer.muted = this.checked;
+			mimicopy.player.muted = this.checked;
 		});
 
 		elCurrentTimeText.setTime = elDurationText.setTime = function(time) {
@@ -223,7 +229,7 @@
 
 	function setupPlayer(file) {
 		reader.onload = function(event) {
-			elPlayer.src = event.target.result;
+			mimicopy.player.src = event.target.result;
 		};
 		reader.readAsDataURL(file);
 	};
