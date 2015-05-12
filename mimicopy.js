@@ -265,12 +265,6 @@
 		return safe;
 	};
 
-	function addListeners(el, listeners) {
-		for (var type in listeners) {
-			el.addEventListener(type, listeners[type]);
-		}
-	}
-
 	var settings = mimicopy.settings = {
 		initialize: function() {
 			this.recipes = {};
