@@ -36,6 +36,22 @@
 				this.els.timeFrom.value = 0;
 				this.els.timeTo.value = this.player.duration;
 			}
+			this.updateTimeRange();
+		},
+
+		updateTimeRange: function() {
+			var max = this.player.duration;
+			var from = Number(this.els.timeFrom.value);
+			var to = Number(this.els.timeTo.value);
+
+			this.els.timeFromText.setTime(from);
+			this.els.timeToText.setTime(to);
+
+			var pFrom = from / max * 100;
+			var pRange = to / max * 100 - pFrom;
+
+			this.els.timeRange.style.marginLeft = pFrom + '%';
+			this.els.timeRange.style.width = pRange + '%';
 		},
 
 		map: function(array, callback) {
@@ -123,6 +139,8 @@
 				}
 			},
 
+			timeRange: '.js-timeRange',
+
 			play: {
 				selector: '.js-play',
 				click: function(event) {
@@ -158,6 +176,8 @@
 					if (from > to) {
 						this.els.timeTo.value = from;
 					}
+
+					this.updateTimeRange();
 				},
 			},
 
@@ -169,6 +189,8 @@
 					if (from > to) {
 						this.els.timeFrom.value = to;
 					}
+
+					this.updateTimeRange();
 				}
 			},
 
@@ -192,6 +214,14 @@
 			},
 			durationText: {
 				selector: '.js-durationText',
+				initialize: function(el) { el.setTime = this.f_setTime; }
+			},
+			timeFromText: {
+				selector: '.js-timeFromText',
+				initialize: function(el) { el.setTime = this.f_setTime; }
+			},
+			timeToText: {
+				selector: '.js-timeToText',
 				initialize: function(el) { el.setTime = this.f_setTime; }
 			},
 
@@ -267,6 +297,8 @@
 						this.els.currentTime.max = this.els.timeFrom.max = this.els.timeTo.max = value;
 						this.els.durationText.setTime(value);
 					}
+
+					this.updateTimeRange();
 				},
 
 				timeupdate: function(event) {

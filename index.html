@@ -10,6 +10,7 @@
 		<h1>MimiCopy</h1>
 		<div class="player">
 			<audio class="js-player"></audio>
+			<div class="player-time-range js-timeRange"></div>
 			<input class="player-time player-timeFrom js-timeFrom" type="range" value="0" step="0.001" />
 			<input class="player-time player-currentTime js-currentTime" type="range" value="0" step="0.001" />
 			<input class="player-time player-timeTo js-timeTo" type="range" value="0" step="0.001" />
@@ -23,6 +24,10 @@
 				<label><input class="js-muted" type="checkbox" disabled /> Muted</label>
 			</div>
 			<div class="player-memories">
+				Range:
+				<span class="js-timeFromText">-:--.---</span>
+				-
+				<span class="js-timeToText">-:--.---</span>
 				<button class="js-save" disabled>Save</button>
 				<button class="js-load" disabled>Load</button>
 			</div>

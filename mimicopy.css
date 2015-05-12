@@ -11,11 +11,19 @@ body.is-dragover {
 .player {
 	text-align: center;
 }
+.player-time-range {
+	background-color: #cfc;
+	height: 90px;
+	margin-left: 0;
+	margin-bottom: -90px;
+	width: 100%;
+}
 .player-time {
 	box-sizing: border-box;
 	display: block;
+	height: 30px;
 	margin: auto;
-	width: 90%;
+	width: 100%;
 }
 
 .soundList-item.is-supported {
