@@ -5,9 +5,9 @@
 		},
 
 		elementConnections: {
-			'body': 'body',
+			body: 'body',
 
-			'droppable': {
+			droppable: {
 				selector: 'html',
 				dragover: function(event) {
 					event.preventDefault();
