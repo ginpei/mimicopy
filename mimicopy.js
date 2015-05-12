@@ -2,7 +2,6 @@
 	var mimicopy = window.mimicopy = {
 		initialize: function() {
 			this._connectToElements(this.elementConnections);
-			this.initialize2();
 		},
 
 		elementConnections: {
@@ -41,6 +40,82 @@
 					}.bind(this)).join('');
 					this.els.soundList.innerHTML += html;
 				}
+			},
+
+			play: {
+				selector: '.js-play',
+				click: function(event) {
+					var currentTime = this.player.currentTime;
+					var from = Number(this.els.timeFrom.value);
+					var to = Number(this.els.timeTo.value);
+					if (currentTime < from || to < currentTime) {
+						this.player.currentTime = from;
+					}
+					this.player.play();
+				}
+			},
+
+			pause: {
+				selector: '.js-pause',
+				click: function(event) {
+					this.player.pause();
+				}
+			},
+
+			currentTime: {
+				selector: '.js-currentTime',
+				change: function(event) {
+					this.player.currentTime = event.currentTarget.value;
+				}
+			},
+
+			timeFrom: {
+				selector: '.js-timeFrom',
+				change: function(event) {
+					var from = Number(this.els.timeFrom.value);
+					var to = Number(this.els.timeTo.value);
+					if (from > to) {
+						this.els.timeTo.value = from;
+					}
+
+					if (this.player.currentTime < from) {
+						this.player.currentTime = from;
+					}
+				},
+			},
+
+			timeTo: {
+				selector: '.js-timeTo',
+				change: function(event) {
+					var from = Number(this.els.timeFrom.value);
+					var to = Number(this.els.timeTo.value);
+					if (from > to) {
+						this.els.timeFrom.value = to;
+					}
+				}
+			},
+
+			volume: {
+				selector: '.js-volume',
+				change: function(event) {
+					this.player.volume = event.currentTarget.value;
+				}
+			},
+
+			muted: {
+				selector: '.js-muted',
+				change: function(event) {
+					this.player.muted = event.currentTarget.checked;
+				}
+			},
+
+			currentTimeText: {
+				selector: '.js-currentTimeText',
+				initialize: function(el) { el.setTime = setTime; }
+			},
+			durationText: {
+				selector: '.js-durationText',
+				initialize: function(el) { el.setTime = setTime; }
 			}
 		},
 
@@ -102,57 +177,57 @@
 		},
 
 		error: function(event) {
-			elPlay.disabled = true;
-			elPause.disabled = true;
+			this.els.play.disabled = true;
+			this.els.pause.disabled = true;
 		},
 
 		canplay: function(event) {
-			elVolume.value = this.player.volume;
-			elMuted.checked = this.player.muted;
-			elVolume.disabled = elMuted.disabled = false;
-			mimicopy.player.play();
+			this.els.volume.value = this.player.volume;
+			this.els.muted.checked = this.player.muted;
+			this.els.volume.disabled = this.els.muted.disabled = false;
+			this.player.play();
 		},
 
 		play: function(event) {
-			elPlay.disabled = true;
-			elPause.disabled = false;
+			this.els.play.disabled = true;
+			this.els.pause.disabled = false;
 		},
 
 		pause: function(event) {
-			elPlay.disabled = false;
-			elPause.disabled = true;
+			this.els.play.disabled = false;
+			this.els.pause.disabled = true;
 		},
 
 		volumechange: function(event) {
-			elVolume.value = this.player.volume;
-			elMuted.checked = this.player.muted;
+			this.els.volume.value = this.player.volume;
+			this.els.muted.checked = this.player.muted;
 		},
 
 		durationchange: function(event) {
 			var value = this.player.duration;
 			if (value === Infinity) {
-				elCurrentTime.max = elTimeFrom.max = elTimeTo.max = 3600;
-				elDurationText.innerHTML = '-:--.---';
+				this.els.currentTime.max = this.els.timeFrom.max = this.els.timeTo.max = 3600;
+				this.els.durationText.innerHTML = '-:--.---';
 				console.warn('Your browser does not support audio duration.');
 			}
 			else {
-				elCurrentTime.max = elTimeFrom.max = elTimeTo.max = value;
-				elDurationText.setTime(value);
+				this.els.currentTime.max = this.els.timeFrom.max = this.els.timeTo.max = value;
+				this.els.durationText.setTime(value);
 			}
-			elTimeFrom.value = 0;
-			elTimeTo.value = elTimeTo.max;
+			this.els.timeFrom.value = 0;
+			this.els.timeTo.value = this.els.timeTo.max;
 		},
 
 		timeupdate: function(event) {
 			var value = this.player.currentTime;
-			var to = Number(elTimeTo.value);
+			var to = Number(this.els.timeTo.value);
 			if (value > to) {
-				var from = Number(elTimeFrom.value);
+				var from = Number(this.els.timeFrom.value);
 				this.player.currentTime = from;
 			}
 			else {
-				elCurrentTime.value = value;
-				elCurrentTimeText.setTime(value);
+				this.els.currentTime.value = value;
+				this.els.currentTimeText.setTime(value);
 			}
 		}
 	};
@@ -160,72 +235,13 @@
 	var soundFileTable = { length:0 };
 	var reader = new FileReader();
 
-	var elPlay = document.querySelector('.js-play');
-	var elPause = document.querySelector('.js-pause');
-	var elCurrentTime = document.querySelector('.js-currentTime');
-	var elTimeFrom = document.querySelector('.js-timeFrom');
-	var elTimeTo = document.querySelector('.js-timeTo');
-	var elCurrentTimeText = document.querySelector('.js-currentTimeText');
-	var elDurationText = document.querySelector('.js-durationText');
-	var elVolume = document.querySelector('.js-volume');
-	var elMuted = document.querySelector('.js-muted');
-
-	mimicopy.initialize2 = function() {
-
-		elPlay.addEventListener('click', function(event) {
-			var currentTime = mimicopy.player.currentTime;
-			var from = Number(elTimeFrom.value);
-			var to = Number(elTimeTo.value);
-			if (currentTime < from || to < currentTime) {
-				mimicopy.player.currentTime = from;
-			}
-			mimicopy.player.play();
-		});
-
-		elPause.addEventListener('click', function(event) {
-			mimicopy.player.pause();
-		});
-
-		elCurrentTime.addEventListener('change', function(event) {
-			mimicopy.player.currentTime = this.value;
-		});
-
-		elTimeFrom.addEventListener('change', function(event) {
-			var from = Number(elTimeFrom.value);
-			var to = Number(elTimeTo.value);
-			if (from > to) {
-				elTimeTo.value = from;
-			}
-
-			if (mimicopy.player.currentTime < from) {
-				mimicopy.player.currentTime = from;
-			}
-		});
-
-		elTimeTo.addEventListener('change', function(event) {
-			var from = Number(elTimeFrom.value);
-			var to = Number(elTimeTo.value);
-			if (from > to) {
-				elTimeFrom.value = to;
-			}
-		});
-
-		elVolume.addEventListener('change', function(event) {
-			mimicopy.player.volume = this.value;
-		});
-
-		elMuted.addEventListener('change', function(event) {
-			mimicopy.player.muted = this.checked;
-		});
-
-		elCurrentTimeText.setTime = elDurationText.setTime = function(time) {
-			var min = parseInt(time/60, 10);
-			var sec = ('0' + parseInt(time%60, 10)).slice(-2);
-			var msec = ('000' + (time - parseInt(time, 10))).slice(-3);
-			var text = min + ':' + sec + '.' + msec;
-			this.innerHTML = text;
-		};
-	};
+	function setTime(time) {
+		var min = parseInt(time/60, 10);
+		var sec = ('0' + parseInt(time%60, 10)).slice(-2);
+		var msec = ('000' + (time - parseInt(time, 10))).slice(-3);
+		var text = min + ':' + sec + '.' + msec;
+		this.innerHTML = text;
+	}
 
 	function setupPlayer(file) {
 		reader.onload = function(event) {
