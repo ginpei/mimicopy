@@ -37,6 +37,30 @@
 			this.innerHTML = text;
 		},
 
+		_connectToElements: function(elements) {
+			var elRoot = this.el || document;
+			var els = this.els = {};
+			for (var name in elements) {
+				var data = elements[name];
+				if (typeof data === 'string') {
+					els[name] = elRoot.querySelector(data);
+				}
+				else {
+					var el = els[name] = elRoot.querySelector(data.selector);
+					for (var type in data) {
+						if (type === 'selector') {
+							continue;
+						}
+						if (type === 'initialize') {
+							data[type].call(this, el);
+							continue;
+						}
+						el.addEventListener(type, data[type].bind(this));
+					}
+				}
+			}
+		},
+
 		elementConnections: {
 			body: 'body',
 
@@ -149,30 +173,6 @@
 			durationText: {
 				selector: '.js-durationText',
 				initialize: function(el) { el.setTime = this.f_setTime; }
-			}
-		},
-
-		_connectToElements: function(elements) {
-			var elRoot = this.el || document;
-			var els = this.els = {};
-			for (var name in elements) {
-				var data = elements[name];
-				if (typeof data === 'string') {
-					els[name] = elRoot.querySelector(data);
-				}
-				else {
-					var el = els[name] = elRoot.querySelector(data.selector);
-					for (var type in data) {
-						if (type === 'selector') {
-							continue;
-						}
-						if (type === 'initialize') {
-							data[type].call(this, el);
-							continue;
-						}
-						el.addEventListener(type, data[type].bind(this));
-					}
-				}
 			}
 		}
 	};
