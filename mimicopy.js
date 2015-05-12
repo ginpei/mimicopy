@@ -1,7 +1,40 @@
 (function() {
 	var mimicopy = window.mimicopy = {
 		initialize: function() {
+			this.soundFileTable = { length:0 };
+			this.reader = new FileReader();
+
 			this._connectToElements(this.elementConnections);
+		},
+
+		setupPlayer: function(file) {
+			this.reader.onload = function(event) {
+				this.player.src = event.target.result;
+			}.bind(this);
+			this.reader.readAsDataURL(file);
+		},
+
+		map: function(array, callback) {
+			return Array.prototype.map.call(array, callback);
+		},
+
+		escape: function (string) {
+			var safe = string
+				.replace(/&/g, '&amp;')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;')
+				.replace(/"/g, '&quot;')
+				.replace(/'/g, '&quot;')
+				.replace(/`/g, '&quot;');
+			return safe;
+		},
+
+		f_setTime: function(time) {
+			var min = parseInt(time/60, 10);
+			var sec = ('0' + parseInt(time%60, 10)).slice(-2);
+			var msec = ('000' + (time - parseInt(time, 10))).slice(-3);
+			var text = min + ':' + sec + '.' + msec;
+			this.innerHTML = text;
 		},
 
 		elementConnections: {
@@ -23,9 +56,9 @@
 					this.els.body.classList.remove('is-dragover');
 
 					var files = event.dataTransfer.files;
-					var html = map(files, function(file, index) {
-						var id = ++soundFileTable.length;
-						soundFileTable[id] = { id:id, file:file };
+					var html = this.map(files, function(file, index) {
+						var id = ++this.soundFileTable.length;
+						this.soundFileTable[id] = { id:id, file:file };
 
 						var classNameText = 'soundList-item js-soundList-item';
 						if (this.player.canPlayType(file.type)) {
@@ -34,7 +67,7 @@
 
 						var html = '<li>';
 						html += '<span class="' + classNameText + '" data-id="' + id + '">';
-						html += escape(file.name);
+						html += this.escape(file.name);
 						html += '</span></li>';
 						return html;
 					}.bind(this)).join('');
@@ -111,11 +144,11 @@
 
 			currentTimeText: {
 				selector: '.js-currentTimeText',
-				initialize: function(el) { el.setTime = setTime; }
+				initialize: function(el) { el.setTime = this.f_setTime; }
 			},
 			durationText: {
 				selector: '.js-durationText',
-				initialize: function(el) { el.setTime = setTime; }
+				initialize: function(el) { el.setTime = this.f_setTime; }
 			}
 		},
 
@@ -163,8 +196,8 @@
 
 			if (el && el.classList.contains('is-supported')) {
 				var id = el.getAttribute('data-id');
-				var file = soundFileTable[id].file;
-				setupPlayer(file);
+				var file = this.soundFileTable[id].file;
+				this.setupPlayer(file);
 			}
 		}
 	};
@@ -230,39 +263,6 @@
 				this.els.currentTimeText.setTime(value);
 			}
 		}
-	};
-
-	var soundFileTable = { length:0 };
-	var reader = new FileReader();
-
-	function setTime(time) {
-		var min = parseInt(time/60, 10);
-		var sec = ('0' + parseInt(time%60, 10)).slice(-2);
-		var msec = ('000' + (time - parseInt(time, 10))).slice(-3);
-		var text = min + ':' + sec + '.' + msec;
-		this.innerHTML = text;
-	}
-
-	function setupPlayer(file) {
-		reader.onload = function(event) {
-			mimicopy.player.src = event.target.result;
-		};
-		reader.readAsDataURL(file);
-	};
-
-	function map(array, callback) {
-		return Array.prototype.map.call(array, callback);
-	}
-
-	function escape(string) {
-		var safe = string
-			.replace(/&/g, '&amp;')
-			.replace(/</g, '&lt;')
-			.replace(/>/g, '&gt;')
-			.replace(/"/g, '&quot;')
-			.replace(/'/g, '&quot;')
-			.replace(/`/g, '&quot;');
-		return safe;
 	};
 
 	var settings = mimicopy.settings = {
