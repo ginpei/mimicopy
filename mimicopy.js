@@ -173,94 +173,94 @@
 			durationText: {
 				selector: '.js-durationText',
 				initialize: function(el) { el.setTime = this.f_setTime; }
-			}
-		}
-	};
+			},
 
-	mimicopy.elementConnections.soundList = {
-		selector: '.js-soundList',
+			soundList: {
+				selector: '.js-soundList',
 
-		click: function(event) {
-			var el = event.target;
-			while (el) {
-				if (el.classList.contains('js-soundList-item')) {
-					break;
-				}
-				else {
-					el = el.parentNode;
-					if (!el.classList) {
-						el = null;
+				click: function(event) {
+					var el = event.target;
+					while (el) {
+						if (el.classList.contains('js-soundList-item')) {
+							break;
+						}
+						else {
+							el = el.parentNode;
+							if (!el.classList) {
+								el = null;
+							}
+						}
+					}
+
+					if (el && el.classList.contains('is-supported')) {
+						var id = el.getAttribute('data-id');
+						var file = this.soundFileTable[id].file;
+						this.setupPlayer(file);
 					}
 				}
-			}
+			},
 
-			if (el && el.classList.contains('is-supported')) {
-				var id = el.getAttribute('data-id');
-				var file = this.soundFileTable[id].file;
-				this.setupPlayer(file);
-			}
-		}
-	};
+			player: {
+				selector: '.js-player',
 
-	mimicopy.elementConnections.player = {
-		selector: '.js-player',
+				initialize: function(el) {
+					this.player = el;
+				},
 
-		initialize: function(el) {
-			this.player = el;
-		},
+				error: function(event) {
+					this.els.play.disabled = true;
+					this.els.pause.disabled = true;
+				},
 
-		error: function(event) {
-			this.els.play.disabled = true;
-			this.els.pause.disabled = true;
-		},
+				canplay: function(event) {
+					this.els.volume.value = this.player.volume;
+					this.els.muted.checked = this.player.muted;
+					this.els.volume.disabled = this.els.muted.disabled = false;
+					this.player.play();
+				},
 
-		canplay: function(event) {
-			this.els.volume.value = this.player.volume;
-			this.els.muted.checked = this.player.muted;
-			this.els.volume.disabled = this.els.muted.disabled = false;
-			this.player.play();
-		},
+				play: function(event) {
+					this.els.play.disabled = true;
+					this.els.pause.disabled = false;
+				},
 
-		play: function(event) {
-			this.els.play.disabled = true;
-			this.els.pause.disabled = false;
-		},
+				pause: function(event) {
+					this.els.play.disabled = false;
+					this.els.pause.disabled = true;
+				},
 
-		pause: function(event) {
-			this.els.play.disabled = false;
-			this.els.pause.disabled = true;
-		},
+				volumechange: function(event) {
+					this.els.volume.value = this.player.volume;
+					this.els.muted.checked = this.player.muted;
+				},
 
-		volumechange: function(event) {
-			this.els.volume.value = this.player.volume;
-			this.els.muted.checked = this.player.muted;
-		},
+				durationchange: function(event) {
+					var value = this.player.duration;
+					if (value === Infinity) {
+						this.els.currentTime.max = this.els.timeFrom.max = this.els.timeTo.max = 3600;
+						this.els.durationText.innerHTML = '-:--.---';
+						console.warn('Your browser does not support audio duration.');
+					}
+					else {
+						this.els.currentTime.max = this.els.timeFrom.max = this.els.timeTo.max = value;
+						this.els.durationText.setTime(value);
+					}
+					this.els.timeFrom.value = 0;
+					this.els.timeTo.value = this.els.timeTo.max;
+				},
 
-		durationchange: function(event) {
-			var value = this.player.duration;
-			if (value === Infinity) {
-				this.els.currentTime.max = this.els.timeFrom.max = this.els.timeTo.max = 3600;
-				this.els.durationText.innerHTML = '-:--.---';
-				console.warn('Your browser does not support audio duration.');
-			}
-			else {
-				this.els.currentTime.max = this.els.timeFrom.max = this.els.timeTo.max = value;
-				this.els.durationText.setTime(value);
-			}
-			this.els.timeFrom.value = 0;
-			this.els.timeTo.value = this.els.timeTo.max;
-		},
-
-		timeupdate: function(event) {
-			var value = this.player.currentTime;
-			var to = Number(this.els.timeTo.value);
-			if (value > to) {
-				var from = Number(this.els.timeFrom.value);
-				this.player.currentTime = from;
-			}
-			else {
-				this.els.currentTime.value = value;
-				this.els.currentTimeText.setTime(value);
+				timeupdate: function(event) {
+					var value = this.player.currentTime;
+					var to = Number(this.els.timeTo.value);
+					if (value > to) {
+						var from = Number(this.els.timeFrom.value);
+						this.player.currentTime = from;
+					}
+					else {
+						this.els.currentTime.value = value;
+						this.els.currentTimeText.setTime(value);
+					}
+				}
 			}
 		}
 	};
