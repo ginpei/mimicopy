@@ -1,5 +1,25 @@
 (function() {
-	var mimicopy = window.mimicopy = {};
+	var mimicopy = window.mimicopy = {
+		_connectToElements: function(elements) {
+			var elRoot = this.el;
+			var els = this.els = {};
+			for (var name in elements) {
+				var data = elements[name];
+				if (typeof data === 'string') {
+					els[name] = elRoot.querySelector(data);
+				}
+				else {
+					var el = els[name] = elRoot.querySelector(data.selector);
+					for (var type in data) {
+						if (type === 'selector') {
+							continue;
+						}
+						el.addEventListener(type, data[type].bind(this));
+					}
+				}
+			}
+		}
+	};
 
 	var soundFileTable = { length:0 };
 	var reader = new FileReader();
