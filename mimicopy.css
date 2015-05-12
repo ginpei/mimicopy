@@ -18,13 +18,13 @@ body.is-dragover {
 	width: 90%;
 }
 
-.soudList-item.is-supported {
+.soundList-item.is-supported {
 	cursor: pointer;
 }
-.soudList-item:not(.is-supported) {
+.soundList-item:not(.is-supported) {
 	color: #999;
 	cursor: default;
 }
-.soudList-item.is-supported:hover {
+.soundList-item.is-supported:hover {
 	text-decoration: underline;
 }

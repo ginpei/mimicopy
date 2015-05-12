@@ -28,7 +28,7 @@
 						var id = ++soundFileTable.length;
 						soundFileTable[id] = { id:id, file:file };
 
-						var classNameText = 'soudList-item js-soudList-item';
+						var classNameText = 'soundList-item js-soundList-item';
 						if (elPlayer.canPlayType(file.type)) {
 							classNameText += ' is-supported';
 						}
@@ -75,7 +75,7 @@
 		click: function(event) {
 			var el = event.target;
 			while (el) {
-				if (el.classList.contains('js-soudList-item')) {
+				if (el.classList.contains('js-soundList-item')) {
 					break;
 				}
 				else {
