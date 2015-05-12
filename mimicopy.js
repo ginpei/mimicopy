@@ -213,6 +213,31 @@
 		}
 	}
 
+	var settings = mimicopy.settings = {
+		initialize: function() {
+			this.recipes = {};
+		},
+
+		addRecipe: function(settings) {
+			var id = this._getRecipeId(settings.file);
+			this.recipes[id] = {
+				from: settings.from,
+				to: settings.to
+			};
+		},
+
+		getRecipe: function(file) {
+			var id = this._getRecipeId(file);
+			var recipe = this.recipes[id];
+			return recipe;
+		},
+
+		_getRecipeId: function(file) {
+			var id = file.name + '-' +file.size + '-' +  file.type;
+			return id;
+		}
+	};
+
 	document.addEventListener('DOMContentLoaded', function(event) {
 		mimicopy.initialize();
 	});
