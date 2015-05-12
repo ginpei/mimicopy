@@ -1,7 +1,7 @@
 (function() {
 	var mimicopy = window.mimicopy = {
 		_connectToElements: function(elements) {
-			var elRoot = this.el;
+			var elRoot = this.el || document;
 			var els = this.els = {};
 			for (var name in elements) {
 				var data = elements[name];
