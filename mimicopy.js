@@ -1,7 +1,45 @@
 (function() {
 	var mimicopy = window.mimicopy = {
 		initialize: function() {
+			this._connectToElements(this.elementConnections);
 			this.initialize2();
+		},
+
+		elementConnections: {
+			'droppable': {
+				selector: 'html',
+				dragover: function(event) {
+					event.preventDefault();
+					elBody.classList.add('is-dragover');
+				},
+
+				dragleave: function(event) {
+					elBody.classList.remove('is-dragover');
+				},
+
+				drop: function(event) {
+					event.preventDefault();
+					elBody.classList.remove('is-dragover');
+
+					var files = event.dataTransfer.files;
+					var html = map(files, function(file, index) {
+						var id = ++soundFileTable.length;
+						soundFileTable[id] = { id:id, file:file };
+
+						var classNameText = 'soudList-item js-soudList-item';
+						if (elPlayer.canPlayType(file.type)) {
+							classNameText += ' is-supported';
+						}
+
+						var html = '<li>';
+						html += '<span class="' + classNameText + '" data-id="' + id + '">';
+						html += escape(file.name);
+						html += '</span></li>';
+						return html;
+					}).join('');
+					elSoundList.innerHTML += html;
+				}
+			}
 		},
 
 		_connectToElements: function(elements) {
@@ -32,7 +70,6 @@
 	var reader = new FileReader();
 
 	var elBody = document.body;
-	var elDroppable = document.querySelector('html');
 	var elSoundList = document.querySelector('.js-soundList');
 	var elPlayer = document.querySelector('.js-player');
 	var elPlay = document.querySelector('.js-play');
@@ -46,40 +83,6 @@
 	var elMuted = document.querySelector('.js-muted');
 
 	mimicopy.initialize2 = function() {
-		addListeners(elDroppable, {
-			dragover: function(event) {
-				event.preventDefault();
-				elBody.classList.add('is-dragover');
-			},
-
-			dragleave: function(event) {
-				elBody.classList.remove('is-dragover');
-			},
-
-			drop: function(event) {
-				event.preventDefault();
-				elBody.classList.remove('is-dragover');
-
-				var files = event.dataTransfer.files;
-				var html = map(files, function(file, index) {
-					var id = ++soundFileTable.length;
-					soundFileTable[id] = { id:id, file:file };
-
-					var classNameText = 'soudList-item js-soudList-item';
-					if (elPlayer.canPlayType(file.type)) {
-						classNameText += ' is-supported';
-					}
-
-					var html = '<li>';
-					html += '<span class="' + classNameText + '" data-id="' + id + '">';
-					html += escape(file.name);
-					html += '</span></li>';
-					return html;
-				}).join('');
-				elSoundList.innerHTML += html;
-			}
-		});
-
 		addListeners(elSoundList, {
 			click: function(event) {
 				var el = event.target;
