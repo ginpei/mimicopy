@@ -79,12 +79,15 @@
 		addListeners(elSoundList, {
 			click: function(event) {
 				var el = event.target;
-				while (el && el.classList) {
+				while (el) {
 					if (el.classList.contains('js-soudList-item')) {
 						break;
 					}
 					else {
 						el = el.parentNode;
+						if (!el.classList) {
+							el = null;
+						}
 					}
 				}
 
