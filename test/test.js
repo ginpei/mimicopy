@@ -44,7 +44,10 @@ describe('Elements', function() {
 					}
 				},
 				checkbox1: {
-					selector: '.checkboxes :nth-child(1)'
+					selector: '.checkboxes :nth-child(1)',
+					initialize: function(el) {
+						this.elCheckbox = el;
+					}
 				},
 				checkbox2: '.checkboxes :nth-child(2)'
 			});
@@ -54,6 +57,10 @@ describe('Elements', function() {
 			expect(obj.els.button).toBe(obj.el.querySelector('#button'));
 			expect(obj.els.checkbox1).toBe(obj.el.querySelector('#checkbox1'));
 			expect(obj.els.checkbox2).toBe(obj.el.querySelector('#checkbox2'));
+		});
+
+		it('runs initializations' ,function() {
+			expect(obj.elCheckbox).toBe(obj.els.checkbox1);
 		});
 
 		it('adds event listeners' ,function() {

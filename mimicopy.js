@@ -14,6 +14,9 @@
 						if (type === 'selector') {
 							continue;
 						}
+						if (type === 'initialize') {
+							data[type].call(this, el);
+						}
 						el.addEventListener(type, data[type].bind(this));
 					}
 				}
