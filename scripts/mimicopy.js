@@ -27,8 +27,21 @@
 			this._setupTimeTo(track);
 
 			this.$durationText = this.$('.js-durationText');
+			this.$timeFromText = this.$('.js-timeFromText');
+			this.$currentTimeText = this.$('.js-currentTimeText');
+			this.$timeToText = this.$('.js-timeToText');
+
 			track.on('change:duration', function(track, value) {
 				this.$durationText.html(this.timeText(value));
+			}.bind(this));
+			track.on('change:timeFrom', function(track, value) {
+				this.$timeFromText.html(this.timeText(value));
+			}.bind(this));
+			track.on('change:currentTime', function(track, value) {
+				this.$currentTimeText.html(this.timeText(value));
+			}.bind(this));
+			track.on('change:timeTo', function(track, value) {
+				this.$timeToText.html(this.timeText(value));
 			}.bind(this));
 		},
 

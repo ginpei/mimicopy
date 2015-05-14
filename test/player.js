@@ -38,6 +38,10 @@
 				it('updates timeFrom UI', function() {
 					expect(player.$('.js-timeFrom')[0].value).toBe('61.001');
 				});
+
+				it('updates timeFrom text', function() {
+					expect(player.$('.js-timeFromText').html()).toBe('1:01.001');
+				});
 			});
 
 			describe('currentTime', function() {
@@ -48,6 +52,10 @@
 				it('updates currentTime UI', function() {
 					expect(player.$('.js-currentTime')[0].value).toBe('61.001');
 				});
+
+				it('updates currentTime text', function() {
+					expect(player.$('.js-currentTimeText').html()).toBe('1:01.001');
+				});
 			});
 
 			describe('timeTo', function() {
@@ -57,6 +65,10 @@
 
 				it('updates timeTo UI', function() {
 					expect(player.$('.js-timeTo')[0].value).toBe('61.001');
+				});
+
+				it('updates timeTo text', function() {
+					expect(player.$('.js-timeToText').html()).toBe('1:01.001');
 				});
 			});
 		});
