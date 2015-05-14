@@ -14,7 +14,7 @@
 		});
 
 		describe('time range', function() {
-			describe('duration', function() {
+			describe('duration value', function() {
 				beforeEach(function() {
 					track.set({ duration:61.001 });
 				});
@@ -30,7 +30,7 @@
 				});
 			});
 
-			describe('timeFrom', function() {
+			describe('timeFrom value', function() {
 				beforeEach(function() {
 					track.set({ timeFrom:61.001 });
 				});
@@ -44,7 +44,7 @@
 				});
 			});
 
-			describe('currentTime', function() {
+			describe('currentTime value', function() {
 				beforeEach(function() {
 					track.set({ currentTime:61.001 });
 				});
@@ -58,7 +58,7 @@
 				});
 			});
 
-			describe('timeTo', function() {
+			describe('timeTo value', function() {
 				beforeEach(function() {
 					track.set({ timeTo:61.001 });
 				});
