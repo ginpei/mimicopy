@@ -102,7 +102,7 @@
 			}.bind(this));
 		},
 
-		updateMax: function(value) { this.$el[0].max = value; },
+		updateMax: function(value) { this.$el.prop('max', value); },
 		updateValue: function(value) { this.$el.val(value); }
 	});
 
