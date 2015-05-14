@@ -1,2 +1,100 @@
 (function(window, document, $, O) {
+	var mimicopy = window.mimicopy = {
+		autorun: function() {
+			$(document).on('DOMContentLoaded', function(event) {
+				this.setup();
+			}.bind(this));
+		},
+
+		setup: function() {
+			var track = this.track = new this.Track();
+			this._setupTimeFrom(track);
+			this._setupCurrentTime(track);
+			this._setupTimeTo(track);
+
+			this.$durationText = this.$('.js-durationText');
+			track.on('change:duration', function(track, value) {
+				this.$durationText.html(this.timeText(value));
+			}.bind(this));
+		},
+
+		_setupTimeFrom: function(track) {
+			var vTimeFrom = this.vTimeFrom = new this.TimeRangeView({
+				attrName: 'timeFrom',
+				el: this.$('.js-timeFrom'),
+				track: track
+			});
+
+			this.connect(track, 'duration', vTimeFrom, 'max');
+			this.connect(track, 'timeFrom', vTimeFrom, 'value');
+		},
+
+		_setupCurrentTime: function(track) {
+			var vCurrentTime = this.vCurrentTime = new this.TimeRangeView({
+				attrName: 'currentTime',
+				el: this.$('.js-currentTime'),
+				track: track
+			});
+
+			this.connect(track, 'duration', vCurrentTime, 'max');
+			this.connect(track, 'currentTime', vCurrentTime, 'value');
+		},
+
+		_setupTimeTo: function(track) {
+			var vTimeTo = this.vTimeTo = new this.TimeRangeView({
+				attrName: 'timeTo',
+				el: this.$('.js-timeTo'),
+				track: track
+			});
+
+			this.connect(track, 'duration', vTimeTo, 'max');
+			this.connect(track, 'timeTo', vTimeTo, 'value');
+		},
+
+		timeText: function(time) {
+			var min = parseInt(time/60, 10);
+			var sec = ('0' + parseInt(time%60, 10)).slice(-2);
+			var msec = ('000' + ((time*1000 - parseInt(time, 10)*1000)/1000)).slice(-3);
+			var text = min + ':' + sec + '.' + msec;
+			return text;
+		},
+
+		connect: function(model, attrName, view, valueName) {
+			var funcName = 'update' + valueName[0].toUpperCase() + valueName.slice(1);
+			if (funcName in view) {
+				model.on('change:' + attrName, function(model, value) {
+					view[funcName](value);
+				});
+			}
+			else {
+				throw new Error('view.' + funcName + ' is not defined.');
+			}
+		},
+
+		$: function(selector) {
+			return $(selector);
+		}
+	};
+
+	mimicopy.Track = O.Model.extend({
+	});
+
+	mimicopy.TimeRangeView = O.View.extend({
+		initialize: function(options) {
+			this.attrName = options.attrName;
+			var track = this.track = options.track;
+
+			this.$el.on('change', function(event) {
+				event.preventDefault();
+				var attr = {};
+				attr[this.attrName] = this.$el[0].value;
+				track.set(attr);
+			}.bind(this));
+		},
+
+		updateMax: function(value) { this.$el[0].max = value; },
+		updateValue: function(value) { this.$el[0].value = value; }
+	});
+
+	mimicopy.autorun();
 })(window, document, gQuery, Osteoporosis);
