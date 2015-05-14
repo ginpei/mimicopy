@@ -97,13 +97,13 @@
 			this.$el.on('change', function(event) {
 				event.preventDefault();
 				var attr = {};
-				attr[this.attrName] = this.$el[0].value;
+				attr[this.attrName] = this.$el.val();
 				track.set(attr);
 			}.bind(this));
 		},
 
 		updateMax: function(value) { this.$el[0].max = value; },
-		updateValue: function(value) { this.$el[0].value = value; }
+		updateValue: function(value) { this.$el.val(value); }
 	});
 
 	mimicopy.autorun();
