@@ -113,12 +113,12 @@ gQuery.fn.on = function(type, listener) {
 	return this;
 };
 
-gQuery.fn.val = function(value) {
+gQuery.fn.prop = function(name, value) {
 	// getter
-	if (arguments.length < 1) {
+	if (arguments.length < 2) {
 		if (this.length > 1) {
 			var el = this[0];
-			return el.value;
+			return el[name];
 		}
 		// else {
 		// 	return undefined;
@@ -127,9 +127,20 @@ gQuery.fn.val = function(value) {
 	// setter
 	else {
 		this.forEach(function(el, index) {
-			el.value = value;
+			el[name] = value;
 		});
 		return this;
+	}
+};
+
+// Dependences
+// prop
+gQuery.fn.val = function(value) {
+	if (arguments.length < 1) {
+		return this.prop('value');
+	}
+	else {
+		return this.prop('value', value);
 	}
 };
 
