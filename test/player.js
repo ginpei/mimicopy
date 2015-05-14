@@ -1,11 +1,13 @@
 (function($, mimicopy) {
 	var mimicopy_setup = mimicopy.setup;
 	mimicopy.setup = function() { };
+	var player, $el, track;
 
+	describe('Player', function() {
 	beforeEach(function() {
-		var $elRoot = $(
-			'<div class="player">' +
-				'<audio class="js-player"></audio>' +
+		$el = $(
+			'<div class="js-player">' +
+				'<audio class="js-audio"></audio>' +
 				'<div class="player-time-range js-timeRange"></div>' +
 				'<input class="player-time player-timeFrom js-timeFrom" type="range" value="0" step="0.001" />' +
 				'<input class="player-time player-currentTime js-currentTime" type="range" value="0" step="0.001" />' +
@@ -25,42 +27,44 @@
 					'<button class="js-load" disabled>Load</button>' +
 				'</div>' +
 			'</div>');
-		mimicopy.$ = function(selector) {
-			return $elRoot.find(selector);
-		};
-		mimicopy_setup.call(mimicopy);
+		track = new mimicopy.Track();
+		player = new mimicopy.Player({
+			el: $el,
+			track: track
+		});
 	});
 
 	describe('duration', function() {
 		beforeEach(function() {
-			mimicopy.track.set({ duration:61.001 });
+			track.set({ duration:61.001 });
 		});
 
 		it('updates text', function() {
-			expect(mimicopy.$('.js-durationText').html()).toBe('1:01.001');
+			expect(player.$('.js-durationText').html()).toBe('1:01.001');
 		});
 
 		it('updates the maximum of time UIs', function() {
-			expect(mimicopy.$('.js-timeFrom')[0].max).toBe('61.001');
-			expect(mimicopy.$('.js-currentTime')[0].max).toBe('61.001');
-			expect(mimicopy.$('.js-timeTo')[0].max).toBe('61.001');
+			expect(player.$('.js-timeFrom')[0].max).toBe('61.001');
+			expect(player.$('.js-currentTime')[0].max).toBe('61.001');
+			expect(player.$('.js-timeTo')[0].max).toBe('61.001');
 		});
 	});
 
 	describe('UIs', function() {
 		it('updates timeFrom UI', function() {
-			mimicopy.track.set({ timeFrom:61.001 });
-			expect(mimicopy.$('.js-timeFrom')[0].value).toBe('61.001');
+			track.set({ timeFrom:61.001 });
+			expect(player.$('.js-timeFrom')[0].value).toBe('61.001');
 		});
 
 		it('updates currentTime UI', function() {
-			mimicopy.track.set({ currentTime:61.001 });
-			expect(mimicopy.$('.js-currentTime')[0].value).toBe('61.001');
+			track.set({ currentTime:61.001 });
+			expect(player.$('.js-currentTime')[0].value).toBe('61.001');
 		});
 
 		it('updates timeTo UI', function() {
-			mimicopy.track.set({ timeTo:61.001 });
-			expect(mimicopy.$('.js-timeTo')[0].value).toBe('61.001');
+			track.set({ timeTo:61.001 });
+			expect(player.$('.js-timeTo')[0].value).toBe('61.001');
 		});
+	});
 	});
 })(gQuery, mimicopy);

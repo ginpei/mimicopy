@@ -4,6 +4,6 @@
 		"scripts/gquery.all.js",
 		"scripts/osteoporosis.js",
 		"scripts/mimicopy.js",
-		"test/test.js"
+		"test/*.js"
 	]
 }

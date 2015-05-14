@@ -8,6 +8,20 @@
 
 		setup: function() {
 			var track = this.track = new this.Track();
+			this.player = new this.Player({
+				el: this.$('.js-player'),
+				track:track
+			});
+		},
+
+		$: function(selector) {
+			return $(selector);
+		}
+	};
+
+	mimicopy.Player = O.View.extend({
+		initialize: function(options) {
+			var track = this.track = options.track;
 			this._setupTimeFrom(track);
 			this._setupCurrentTime(track);
 			this._setupTimeTo(track);
@@ -19,7 +33,7 @@
 		},
 
 		_setupTimeFrom: function(track) {
-			var vTimeFrom = this.vTimeFrom = new this.TimeRangeView({
+			var vTimeFrom = this.vTimeFrom = new mimicopy.TimeRangeView({
 				attrName: 'timeFrom',
 				el: this.$('.js-timeFrom'),
 				track: track
@@ -30,7 +44,7 @@
 		},
 
 		_setupCurrentTime: function(track) {
-			var vCurrentTime = this.vCurrentTime = new this.TimeRangeView({
+			var vCurrentTime = this.vCurrentTime = new mimicopy.TimeRangeView({
 				attrName: 'currentTime',
 				el: this.$('.js-currentTime'),
 				track: track
@@ -41,7 +55,7 @@
 		},
 
 		_setupTimeTo: function(track) {
-			var vTimeTo = this.vTimeTo = new this.TimeRangeView({
+			var vTimeTo = this.vTimeTo = new mimicopy.TimeRangeView({
 				attrName: 'timeTo',
 				el: this.$('.js-timeTo'),
 				track: track
@@ -69,12 +83,8 @@
 			else {
 				throw new Error('view.' + funcName + ' is not defined.');
 			}
-		},
-
-		$: function(selector) {
-			return $(selector);
 		}
-	};
+	});
 
 	mimicopy.Track = O.Model.extend({
 	});
