@@ -44,6 +44,18 @@
 				});
 			});
 
+			describe('timeFrom UI', function() {
+				beforeEach(function() {
+					var $el = player.$('.js-timeFrom');
+					$el.val(61.001);
+					test_helper_fireEvent($el[0], 'change');
+				});
+
+				it('updates timeFrom value', function() {
+					expect(track.get('timeFrom')).toBe(61.001);
+				});
+			});
+
 			describe('currentTime value', function() {
 				beforeEach(function() {
 					track.set({ currentTime:61.001 });
@@ -58,6 +70,18 @@
 				});
 			});
 
+			describe('currentTime UI', function() {
+				beforeEach(function() {
+					var $el = player.$('.js-currentTime');
+					$el.val(61.001);
+					test_helper_fireEvent($el[0], 'change');
+				});
+
+				it('updates currentTime value', function() {
+					expect(track.get('currentTime')).toBe(61.001);
+				});
+			});
+
 			describe('timeTo value', function() {
 				beforeEach(function() {
 					track.set({ timeTo:61.001 });
@@ -69,6 +93,18 @@
 
 				it('updates timeTo text', function() {
 					expect(player.$('.js-timeToText').html()).toBe('1:01.001');
+				});
+			});
+
+			describe('timeTo UI', function() {
+				beforeEach(function() {
+					var $el = player.$('.js-timeTo');
+					$el.val(61.001);
+					test_helper_fireEvent($el[0], 'change');
+				});
+
+				it('updates timeTo value', function() {
+					expect(track.get('timeTo')).toBe(61.001);
 				});
 			});
 		});

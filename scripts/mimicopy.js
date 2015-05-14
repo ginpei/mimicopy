@@ -110,7 +110,7 @@
 			this.$el.on('change', function(event) {
 				event.preventDefault();
 				var attr = {};
-				attr[this.attrName] = this.$el.val();
+				attr[this.attrName] = Number(this.$el.val());
 				track.set(attr);
 			}.bind(this));
 		},
