@@ -3,8 +3,8 @@
 	"src_files": [
 		"lib/gquery.all.js",
 		"lib/osteoporosis.js",
-		"mimicopy.js",
-		"src/*.js",
+		"src/mimicopy.js",
+		"src/module/*.js",
 		"test/helper/*.js",
 		"test/*.js"
 	]
