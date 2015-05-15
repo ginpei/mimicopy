@@ -17,7 +17,7 @@
 
 		setup: function() {
 			var track = this.track = new this.Track();
-			this.player = new this.Player({
+			this.vPlayer = new this.PlayerView({
 				el: this.$('.js-player'),
 				track:track
 			});
@@ -28,7 +28,7 @@
 		}
 	};
 
-	mimicopy.Player = O.View.extend({
+	mimicopy.PlayerView = O.View.extend({
 		initialize: function(options) {
 			var track = this.track = options.track;
 			this._setupTimeFrom(track);
