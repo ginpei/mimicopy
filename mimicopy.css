@@ -23,6 +23,7 @@ body.is-dragover {
 	display: block;
 	height: 30px;
 	margin: auto;
+	padding: 0;
 	width: 100%;
 }
 
