@@ -1,4 +1,13 @@
 (function(window, document, $, O) {
+	O.Model.prototype.beforeFilter = function() { /* noop */ };
+	O.Model.prototype._setAttributes = O.Model.prototype.set;
+	O.Model.prototype.set = function(attr) {
+		if (attr) {
+			this.beforeFilter(attr);
+		}
+		return this._setAttributes(attr);
+	};
+
 	var mimicopy = window.mimicopy = {
 		autorun: function() {
 			$(document).on('DOMContentLoaded', function(event) {
@@ -102,6 +111,28 @@
 	});
 
 	mimicopy.Track = O.Model.extend({
+		beforeFilter: function(attr) {
+			if ('currentTime' in attr || 'timeFrom' in attr || 'timeTo' in attr) {
+				this._currentTimeFilter(attr);
+			}
+		},
+
+		_currentTimeFilter: function(attr) {
+			var time = this.getTimeAttributes(attr);
+			if (time.current < time.from || time.to < time.current) {
+				attr.currentTime = time.from;
+			}
+		},
+
+		getTimeAttributes: function(attr) {
+			var curAttr = this.attributes;
+			var time = {
+				current: ('currentTime' in attr ? attr : curAttr).currentTime,
+				from: ('timeFrom' in attr ? attr : curAttr).timeFrom,
+				to: ('timeTo' in attr ? attr : curAttr).timeTo
+			};
+			return time;
+		}
 	});
 
 	mimicopy.TimeRangeView = O.View.extend({

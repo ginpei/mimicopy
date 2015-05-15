@@ -1,0 +1,64 @@
+describe('Track', function() {
+	var track;
+	beforeEach(function() {
+		track = new mimicopy.Track();
+	});
+
+	describe('currentTime', function() {
+		beforeEach(function() {
+			track.set({
+				currentTime: 10,
+				timeFrom: 5,
+				timeTo: 15
+			});
+		});
+
+		describe('uses currentTime', function() {
+			it('from specified attributes if specified', function() {
+				var time = track.getTimeAttributes({ currentTime:11 });
+				expect(time.current).toBe(11);
+			});
+
+			it('from current attributes if not specified', function() {
+				var time = track.getTimeAttributes({});
+				expect(time.current).toBe(10);
+			});
+		});
+
+		describe('uses timeFrom', function() {
+			it('from specified attributes if specified', function() {
+				var time = track.getTimeAttributes({ timeFrom:6 });
+				expect(time.from).toBe(6);
+			});
+
+			it('from current attributes if not specified', function() {
+				var time = track.getTimeAttributes({});
+				expect(time.from).toBe(5);
+			});
+		});
+
+		describe('uses timeTo', function() {
+			it('from specified attributes if specified', function() {
+				var time = track.getTimeAttributes({ timeTo:16 });
+				expect(time.to).toBe(16);
+			});
+
+			it('from current attributes if not specified', function() {
+				var time = track.getTimeAttributes({});
+				expect(time.to).toBe(15);
+			});
+		});
+
+		describe('sets timeFrom as currentTime', function() {
+			it('if specified currentTime is less than timeFrom', function() {
+				track.set({ currentTime:4 });
+				expect(track.get('currentTime')).toBe(5);
+			});
+
+			it('if currentTime is greater than specified timeTo', function() {
+				track.set({ currentTime:16 });
+				expect(track.get('currentTime')).toBe(5);
+			});
+		});
+	});
+});
