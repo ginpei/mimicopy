@@ -5,25 +5,10 @@ window.mimicopy.PlayerView = Osteoporosis.View.extend({
 		this._setupCurrentTime(track);
 		this._setupTimeTo(track);
 
-		this.$durationText = this.$('.js-durationText');
-		track.on('change:duration', function(track, value) {
-			this.$durationText.html(this.timeText(value));
-		}.bind(this));
-
-		this.$timeFromText = this.$('.js-timeFromText');
-		track.on('change:timeFrom', function(track, value) {
-			this.$timeFromText.html(this.timeText(value));
-		}.bind(this));
-
-		this.$currentTimeText = this.$('.js-currentTimeText');
-		track.on('change:currentTime', function(track, value) {
-			this.$currentTimeText.html(this.timeText(value));
-		}.bind(this));
-
-		this.$timeToText = this.$('.js-timeToText');
-		track.on('change:timeTo', function(track, value) {
-			this.$timeToText.html(this.timeText(value));
-		}.bind(this));
+		this._connectTimeText('duration');
+		this._connectTimeText('timeFrom');
+		this._connectTimeText('currentTime');
+		this._connectTimeText('timeTo');
 	},
 
 	_setupTimeFrom: function(track) {
@@ -57,6 +42,13 @@ window.mimicopy.PlayerView = Osteoporosis.View.extend({
 
 		this.connect(track, 'duration', vTimeTo, 'max');
 		this.connect(track, 'timeTo', vTimeTo, 'value');
+	},
+
+	_connectTimeText: function(name) {
+		var $el = this.$('.js-' + name + 'Text');
+		this.track.on('change:' + name, function(track, value) {
+			$el.html(this.timeText(value));
+		}.bind(this));
 	},
 
 	timeText: function(time) {
