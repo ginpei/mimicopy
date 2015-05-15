@@ -120,6 +120,7 @@
 		_currentTimeFilter: function(attr) {
 			var time = this.getTimeAttributes(attr);
 			if (time.current < time.from || time.to < time.current) {
+				this.attributes.currentTime = null;
 				attr.currentTime = time.from;
 			}
 		},

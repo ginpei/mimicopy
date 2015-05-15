@@ -60,5 +60,14 @@ describe('Track', function() {
 				expect(track.get('currentTime')).toBe(5);
 			});
 		});
+
+		it('triggers change:currentTime event when out range time is set for currentTime even if last currentTime equals timeFrom', function() {
+			track.set({ currentTime:track.get('timeFrom') });
+
+			var called = 0;
+			track.on('change:currentTime', function() { called++; });
+			track.set({ currentTime:track.get('timeFrom')-1 });
+			expect(called).toBe(1);
+		});
 	});
 });
