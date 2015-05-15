@@ -107,14 +107,15 @@
 	mimicopy.TimeRangeView = O.View.extend({
 		initialize: function(options) {
 			this.attrName = options.attrName;
-			var track = this.track = options.track;
+			this.track = options.track;
+			this.$el.on('change', this.onchange.bind(this));
+		},
 
-			this.$el.on('change', function(event) {
-				event.preventDefault();
-				var attr = {};
-				attr[this.attrName] = Number(this.$el.val());
-				track.set(attr);
-			}.bind(this));
+		onchange: function(event) {
+			event.preventDefault();
+			var attr = {};
+			attr[this.attrName] = Number(this.$el.val());
+			this.track.set(attr);
 		},
 
 		updateMax: function(value) { this.$el.prop('max', value); },
