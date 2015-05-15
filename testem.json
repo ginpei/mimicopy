@@ -1,9 +1,9 @@
 {
 	"framework": "jasmine2",
 	"src_files": [
-		"scripts/gquery.all.js",
-		"scripts/osteoporosis.js",
-		"scripts/mimicopy.js",
+		"lib/gquery.all.js",
+		"lib/osteoporosis.js",
+		"mimicopy.js",
 		"src/*.js",
 		"test/helper/*.js",
 		"test/*.js"
