@@ -16,6 +16,16 @@
 		},
 
 		setup: function() {
+			this.vFileReceiver = new this.FileReceiverView({
+				el: $('body')
+			});
+			this.vFileReceiver.on('receive', function(files) {
+				// FIXME
+				console.log([].map.call(files, function(file) {
+					return file.name;
+				}));
+			});
+
 			var track = this.track = new this.Track();
 			this.vPlayer = new this.PlayerView({
 				el: this.$('.js-player'),
