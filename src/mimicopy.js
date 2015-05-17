@@ -17,7 +17,7 @@
 
 		setup: function() {
 			this.vFileReceiver = new this.FileReceiverView({
-				el: $('body')
+				el: $('html')
 			});
 			this.vFileReceiver.on('receive', function(files) {
 				// FIXME
