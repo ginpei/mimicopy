@@ -8,6 +8,17 @@
 		return this._setAttributes(attr);
 	};
 
+	O.View.prototype._e = function(text) {
+		var safe = text
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&quot;')
+			.replace(/`/g, '&quot;');
+		return safe;
+	};
+
 	var mimicopy = window.mimicopy = {
 		autorun: function() {
 			$(document).on('DOMContentLoaded', function(event) {
@@ -19,22 +30,33 @@
 			this.vFileReceiver = new this.FileReceiverView({
 				el: $('html')
 			});
-			this.vFileReceiver.on('receive', function(files) {
-				// FIXME
-				console.log([].map.call(files, function(file) {
-					return file.name;
-				}));
-			});
+			this.vFileReceiver.on('receive', this._openFiles.bind(this));
 
 			var track = this.track = new this.Track();
 			this.vPlayer = new this.PlayerView({
 				el: this.$('.js-player'),
 				track:track
 			});
+
+			this.vFileList = new this.FileListView({
+				el: this.$('.js-files')
+			});
+			this.vFileList.on('selectitem', this._selectFile.bind(this));
 		},
 
 		$: function(selector) {
 			return $(selector);
+		},
+
+		_openFiles: function(fileDataList) {
+			for (var i=0, l=fileDataList.length; i<l; i++) {
+				var file = new mimicopy.File(fileDataList[i]);
+				this.vFileList.add(file);
+			}
+		},
+
+		_selectFile: function(file) {
+			console.log(file.get('name'), file.isSupported());
 		}
 	};
 
