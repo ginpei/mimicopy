@@ -69,5 +69,12 @@ window.mimicopy.PlayerView = Osteoporosis.View.extend({
 		else {
 			throw new Error('view.' + funcName + ' is not defined.');
 		}
+	},
+
+	setData: function(dataUri) {
+		// FIXME
+		var audio = this.$('.js-audio')[0];
+		audio.src = dataUri;
+		audio.play();
 	}
 });

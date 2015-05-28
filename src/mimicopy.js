@@ -56,12 +56,7 @@
 		},
 
 		_selectFile: function(file) {
-			file.read(function(dataUri) {
-				// TODO: play on the unique audio
-				var audio = document.createElement('audio');
-				audio.autoplay = true;
-				audio.src = dataUri;
-			});
+			file.read(this.vPlayer.setData.bind(this));
 		}
 	};
 
