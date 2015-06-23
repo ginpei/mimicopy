@@ -5,6 +5,58 @@ describe('Track', function() {
 	});
 
 	describe('audio events', function() {
+		describe('event bubbling', function() {
+			var spy, audio;
+			beforeEach(function() {
+				spy = jasmine.createSpy();
+
+				audio = document.createElement('audio');
+				track.setAudio(audio);
+			});
+
+			it('throws a error event', function() {
+				track.on('error', spy);
+				test_helper_fireEvent(audio, 'error');
+				expect(spy).toHaveBeenCalled();
+			});
+
+			it('throws a play event', function() {
+				track.on('play', spy);
+				test_helper_fireEvent(audio, 'play');
+				expect(spy).toHaveBeenCalled();
+			});
+
+			it('throws a pause event', function() {
+				track.on('pause', spy);
+				test_helper_fireEvent(audio, 'pause');
+				expect(spy).toHaveBeenCalled();
+			});
+
+			it('throws a durationchange event', function() {
+				track.on('durationchange', spy);
+				test_helper_fireEvent(audio, 'durationchange');
+				expect(spy).toHaveBeenCalled();
+			});
+
+			it('throws a timeupdate event', function() {
+				track.on('timeupdate', spy);
+				test_helper_fireEvent(audio, 'timeupdate');
+				expect(spy).toHaveBeenCalled();
+			});
+
+			it('throws a ratechange event', function() {
+				track.on('ratechange', spy);
+				test_helper_fireEvent(audio, 'ratechange');
+				expect(spy).toHaveBeenCalled();
+			});
+
+			it('throws a volumechange event', function() {
+				track.on('volumechange', spy);
+				test_helper_fireEvent(audio, 'volumechange');
+				expect(spy).toHaveBeenCalled();
+			});
+		});
+
 		describe('durationchange', function() {
 			beforeEach(function() {
 				track.audio = { duration:100 };
