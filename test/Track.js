@@ -4,6 +4,27 @@ describe('Track', function() {
 		track = new mimicopy.Track();
 	});
 
+	describe('audio events', function() {
+		describe('durationchange', function() {
+			beforeEach(function() {
+				track.audio = { duration:100 };
+				track.ondurationchange({ type:'durationchange' });
+			});
+
+			it('updates duration', function() {
+				expect(track.get('duration')).toBe(100);
+			});
+
+			it('reset from-time', function() {
+				expect(track.get('from')).toBe(0);
+			});
+
+			it('reset to-time', function() {
+				expect(track.get('to')).toBe(100);
+			});
+		});
+	});
+
 	describe('currentTime', function() {
 		beforeEach(function() {
 			track.set({

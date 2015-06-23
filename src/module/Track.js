@@ -17,6 +17,7 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 	setAudio: function(audio) {
 		this.audio = audio;
 		$(this.audio)
+			.on('durationchange', this.ondurationchange.bind(this))
 			.on('error', this.trigger.bind(this, 'error'))
 			.on('play', this.trigger.bind(this, 'play'))
 			.on('pause', this.trigger.bind(this, 'pause'))
@@ -61,5 +62,13 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 			to: ('timeTo' in attr ? attr : curAttr).timeTo
 		};
 		return time;
+	},
+
+	ondurationchange: function(event) {
+		this.set({
+			duration: this.audio.duration,
+			from: 0,
+			to: this.audio.duration
+		});
 	}
 });
