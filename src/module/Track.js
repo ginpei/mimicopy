@@ -1,8 +1,16 @@
 window.mimicopy.Track = Osteoporosis.Model.extend({
 	initialize: function(attributes) {
-		// audio is not data
-		this.audio = attributes.audio;
-		delete this.attributes.audio;
+		attributes = attributes || {};
+
+		if (attributes.audio) {
+			// audio is not data
+			this.setAudio(attributes.audio);
+			delete this.attributes.audio;
+		}
+	},
+
+	setAudio: function(audio) {
+		this.audio = audio;
 	},
 
 	/**
