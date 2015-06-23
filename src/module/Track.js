@@ -1,4 +1,23 @@
 window.mimicopy.Track = Osteoporosis.Model.extend({
+	initialize: function(attributes) {
+		// audio is not data
+		this.audio = attributes.audio;
+		delete this.attributes.audio;
+	},
+
+	/**
+	 * Atach a file and reset times.
+	 * @param {mimicopy.File} file
+	 */
+	attach: function(file) {
+		file.read(function(dataUri) {
+			// FIXME
+			var audio = this.audio;
+			audio.src = dataUri;
+			audio.play();
+		}.bind(this));
+	},
+
 	beforeFilter: function(attr) {
 		if ('currentTime' in attr || 'timeFrom' in attr || 'timeTo' in attr) {
 			this._currentTimeFilter(attr);

@@ -32,7 +32,7 @@
 			});
 			this.vFileReceiver.on('receive', this._openFiles.bind(this));
 
-			var track = this.track = new this.Track();
+			var track = this.track = new this.Track({ audio:this.$('.js-audio')[0] });
 			this.vPlayer = new this.PlayerView({
 				el: this.$('.js-player'),
 				track:track
@@ -56,12 +56,7 @@
 		},
 
 		_selectFile: function(file) {
-			file.read(function(dataUri) {
-				// TODO: play on the unique audio
-				var audio = document.createElement('audio');
-				audio.autoplay = true;
-				audio.src = dataUri;
-			});
+			this.track.attach(file);
 		}
 	};
 
