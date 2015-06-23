@@ -7,6 +7,11 @@
 		}
 		return this._setAttributes(attr);
 	};
+	O.Model.prototype.setBubbling = O.View.prototype.setBubbling = function(target, types) {
+		types.forEach(function(type, index) {
+			target.on(type, this.trigger.bind(this, type));
+		}.bind(this));
+	};
 
 	O.View.prototype._e = function(text) {
 		var safe = text
