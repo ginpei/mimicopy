@@ -75,6 +75,17 @@ describe('Track', function() {
 				expect(track.get('to')).toBe(100);
 			});
 		});
+
+		describe('timeupdate', function() {
+			beforeEach(function() {
+				track.audio = { currentTime:100 };
+				track.ontimeupdate({ type:'timeupdate' });
+			});
+
+			it('updates currentTime', function() {
+				expect(track.get('currentTime')).toBe(100);
+			});
+		});
 	});
 
 	describe('currentTime', function() {

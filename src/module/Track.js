@@ -19,7 +19,8 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 		var $audio = $(this.audio);
 
 		$audio
-			.on('durationchange', this.ondurationchange.bind(this));
+			.on('durationchange', this.ondurationchange.bind(this))
+			.on('timeupdate', this.ontimeupdate.bind(this));
 
 		this.setBubbling($audio, [
 			'error',
@@ -74,6 +75,12 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 			duration: this.audio.duration,
 			from: 0,
 			to: this.audio.duration
+		});
+	},
+
+	ontimeupdate: function(event) {
+		this.set({
+			currentTime: this.audio.currentTime
 		});
 	}
 });
