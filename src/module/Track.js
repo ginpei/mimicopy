@@ -70,6 +70,9 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 		return time;
 	},
 
+	/**
+	 * track <- audio
+	 */
 	ondurationchange: function(event) {
 		this.set({
 			duration: this.audio.duration,
@@ -78,6 +81,9 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 		});
 	},
 
+	/**
+	 * track <- audio
+	 */
 	ontimeupdate: function(event) {
 		this.set({
 			currentTime: this.audio.currentTime
