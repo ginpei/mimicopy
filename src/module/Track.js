@@ -9,8 +9,21 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 		}
 	},
 
+	/**
+	 * Attach audio I/F (element).
+	 * This function does not consider about destructing.
+	 * @param {HtmlElement} audio
+	 */
 	setAudio: function(audio) {
 		this.audio = audio;
+		$(this.audio)
+			.on('error', this.trigger.bind(this, 'error'))
+			.on('play', this.trigger.bind(this, 'play'))
+			.on('pause', this.trigger.bind(this, 'pause'))
+			.on('durationchange', this.trigger.bind(this, 'durationchange'))
+			.on('timeupdate', this.trigger.bind(this, 'timeupdate'))
+			.on('ratechange', this.trigger.bind(this, 'ratechange'))
+			.on('volumechange', this.trigger.bind(this, 'volumechange'));
 	},
 
 	/**
