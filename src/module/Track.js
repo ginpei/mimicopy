@@ -7,6 +7,8 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 			this.setAudio(attributes.audio);
 			delete this.attributes.audio;
 		}
+
+		this.on('change:currentTime', this.onchangeCurrentTime.bind(this));
 	},
 
 	/**
@@ -88,5 +90,12 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 		this.set({
 			currentTime: this.audio.currentTime
 		});
+	},
+
+	/**
+	 * track -> audio
+	 */
+	onchangeCurrentTime: function(track, currentTime) {
+		this.audio.currentTime = currentTime;
 	}
 });

@@ -2,6 +2,7 @@ describe('Track', function() {
 	var track;
 	beforeEach(function() {
 		track = new mimicopy.Track();
+		track.audio = {};
 	});
 
 	describe('audio events', function() {
@@ -85,6 +86,16 @@ describe('Track', function() {
 			it('updates currentTime', function() {
 				expect(track.get('currentTime')).toBe(100);
 			});
+		});
+	});
+
+	describe('reflection', function() {
+		beforeEach(function() {
+			track.set({ currentTime:100 });
+		});
+
+		it('updates currentTime for audio when model\'s value is changed', function() {
+			expect(track.audio.currentTime).toBe(100);
 		});
 	});
 
