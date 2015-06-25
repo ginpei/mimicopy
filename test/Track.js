@@ -69,11 +69,11 @@ describe('Track', function() {
 			});
 
 			it('reset from-time', function() {
-				expect(track.get('from')).toBe(0);
+				expect(track.get('timeFrom')).toBe(0);
 			});
 
 			it('reset to-time', function() {
-				expect(track.get('to')).toBe(100);
+				expect(track.get('timeTo')).toBe(100);
 			});
 		});
 
