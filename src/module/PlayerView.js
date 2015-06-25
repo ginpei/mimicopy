@@ -9,6 +9,11 @@ window.mimicopy.PlayerView = Osteoporosis.View.extend({
 		this._connectTimeText('timeFrom');
 		this._connectTimeText('currentTime');
 		this._connectTimeText('timeTo');
+
+		this.$('.js-play').on('click', this.onclickPlay.bind(this));
+		this.$('.js-pause').on('click', this.onclickPause.bind(this));
+
+		this.$('[disabled]').prop('disabled', false);  // FIXME
 	},
 
 	_setupTimeFrom: function(track) {
@@ -69,5 +74,13 @@ window.mimicopy.PlayerView = Osteoporosis.View.extend({
 		else {
 			throw new Error('view.' + funcName + ' is not defined.');
 		}
+	},
+
+	onclickPlay: function(event) {
+		this.track.play();
+	},
+
+	onclickPause: function(event) {
+		this.track.pause();
 	}
 });

@@ -72,6 +72,14 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 		return time;
 	},
 
+	play: function() {
+		this.audio.play();
+	},
+
+	pause: function() {
+		this.audio.pause();
+	},
+
 	/**
 	 * track <- audio
 	 */

@@ -5,6 +5,7 @@ describe('PlayerView', function() {
 	beforeEach(function() {
 		$el = $(window.test_helper_html);
 		track = new window.mimicopy.Track();
+		track.audio = {};
 		vPlayer = new window.mimicopy.PlayerView({
 			el: $el,
 			track: track
