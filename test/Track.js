@@ -75,6 +75,11 @@ describe('Track', function() {
 			it('reset to-time', function() {
 				expect(track.get('timeTo')).toBe(100);
 			});
+
+			it('reset current-time', function() {
+				expect(track.get('currentTime')).toBe(0);
+				expect(track.audio.currentTime).toBe(0);
+			});
 		});
 
 		describe('timeupdate', function() {
