@@ -94,12 +94,12 @@ describe('Track', function() {
 		});
 	});
 
-	describe('reflection', function() {
+	describe('reflecting to the audio when model\'s value is changed', function() {
 		beforeEach(function() {
 			track.set({ currentTime:100 });
 		});
 
-		it('updates currentTime for audio when model\'s value is changed', function() {
+		it('updates currentTime', function() {
 			expect(track.audio.currentTime).toBe(100);
 		});
 	});
