@@ -9,6 +9,7 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 		}
 
 		this.on('change:currentTime', this.onchangeCurrentTime.bind(this));
+		this.on('change:volume', this.onchangeVolume.bind(this));
 	},
 
 	/**
@@ -22,7 +23,8 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 
 		$audio
 			.on('durationchange', this.ondurationchange.bind(this))
-			.on('timeupdate', this.ontimeupdate.bind(this));
+			.on('timeupdate', this.ontimeupdate.bind(this))
+			.on('volumechange', this.onvolumechange.bind(this));
 
 		this.setBubbling($audio, [
 			'error',
@@ -102,9 +104,25 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 	},
 
 	/**
+	 * track <- audio
+	 */
+	onvolumechange: function(event) {
+		this.set({
+			volume: this.audio.volume
+		});
+	},
+
+	/**
 	 * track -> audio
 	 */
 	onchangeCurrentTime: function(track, currentTime) {
 		this.audio.currentTime = currentTime;
+	},
+
+	/**
+	 * track -> audio
+	 */
+	onchangeVolume: function(track, volume) {
+		this.audio.volume = volume;
 	}
 });

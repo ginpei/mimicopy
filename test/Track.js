@@ -92,15 +92,30 @@ describe('Track', function() {
 				expect(track.get('currentTime')).toBe(100);
 			});
 		});
+
+		describe('volumechange', function() {
+			beforeEach(function() {
+				track.audio = { volume:100 };
+				track.onvolumechange({ type:'volumechange' });
+			});
+
+			it('updates volume', function() {
+				expect(track.get('volume')).toBe(100);
+			});
+		});
 	});
 
 	describe('reflecting to the audio when model\'s value is changed', function() {
 		beforeEach(function() {
-			track.set({ currentTime:100 });
+			track.set({ currentTime:100, volume:0.123 });
 		});
 
 		it('updates currentTime', function() {
 			expect(track.audio.currentTime).toBe(100);
+		});
+
+		it('updates volume', function() {
+			expect(track.audio.volume).toBe(0.123);
 		});
 	});
 
