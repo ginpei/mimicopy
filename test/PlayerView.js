@@ -106,5 +106,30 @@ describe('PlayerView', function() {
 				expect(track.get('timeTo')).toBe(61.001);
 			});
 		});
+
+		describe('volume value', function() {
+			beforeEach(function() {
+				vPlayer.$('.js-volume').attr('max', 200);
+				track.set({ volume:0.25 });
+			});
+
+			it('updates volume UI', function() {
+				expect(vPlayer.$('.js-volume').val()).toBe('50');
+			});
+		});
+
+		describe('volume UI', function() {
+			beforeEach(function() {
+				var $el = vPlayer.$('.js-volume');
+				$el
+					.attr('max', 200)
+					.val(50);
+				test_helper_fireEvent($el[0], 'change');
+			});
+
+			it('updates volume value', function() {
+				expect(track.get('volume')).toBe(0.25);
+			});
+		});
 	});
 });

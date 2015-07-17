@@ -9,9 +9,11 @@ window.mimicopy.PlayerView = Osteoporosis.View.extend({
 		this._connectTimeText('timeFrom');
 		this._connectTimeText('currentTime');
 		this._connectTimeText('timeTo');
+		track.on('change:volume', this.onchangeTrackVolume.bind(this));
 
 		this.$('.js-play').on('click', this.onclickPlay.bind(this));
 		this.$('.js-pause').on('click', this.onclickPause.bind(this));
+		this.$volume = this.$('.js-volume').on('change', this.onchangeUiVolume.bind(this));
 
 		this.$('[disabled]').prop('disabled', false);  // FIXME
 	},
@@ -82,5 +84,17 @@ window.mimicopy.PlayerView = Osteoporosis.View.extend({
 
 	onclickPause: function(event) {
 		this.track.pause();
+	},
+
+	onchangeTrackVolume: function(event) {
+		var $volume = this.$volume;
+		var volume = $volume.attr('max') * this.track.get('volume');
+		$volume.val(volume);
+	},
+
+	onchangeUiVolume: function(event) {
+		var $volume = this.$volume;
+		var volume = $volume.val() / $volume.attr('max');
+		this.track.set({ volume:volume });
 	}
 });
