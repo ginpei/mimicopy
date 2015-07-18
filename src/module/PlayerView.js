@@ -78,6 +78,16 @@ window.mimicopy.PlayerView = Osteoporosis.View.extend({
 		}
 	},
 
+	/**
+	 * Update volume UI's value.
+	 * @param {Number} volume It can be `0.0` to `1.0`.
+	 */
+	updateVolume: function(volume) {
+		var $volume = this.$volume;
+		volume = $volume.attr('max') * this.track.get('volume');
+		$volume.val(volume);
+	},
+
 	onclickPlay: function(event) {
 		this.track.play();
 	},
@@ -87,9 +97,7 @@ window.mimicopy.PlayerView = Osteoporosis.View.extend({
 	},
 
 	onchangeTrackVolume: function(event) {
-		var $volume = this.$volume;
-		var volume = $volume.attr('max') * this.track.get('volume');
-		$volume.val(volume);
+		this.updateVolume();
 	},
 
 	onchangeUiVolume: function(event) {
