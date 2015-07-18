@@ -10,6 +10,7 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 
 		this.on('change:currentTime', this.onchangeCurrentTime.bind(this));
 		this.on('change:volume', this.onchangeVolume.bind(this));
+		this.on('change:muted', this.onchangeMuted.bind(this));
 	},
 
 	/**
@@ -109,6 +110,7 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 	 */
 	onvolumechange: function(event) {
 		this.set({
+			muted: this.audio.muted,
 			volume: this.audio.volume
 		});
 	},
@@ -125,5 +127,12 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 	 */
 	onchangeVolume: function(track, volume) {
 		this.audio.volume = volume;
+	},
+
+	/**
+	 * track -> audio
+	 */
+	onchangeMuted: function(track, muted) {
+		this.audio.muted = muted;
 	}
 });

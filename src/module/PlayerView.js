@@ -10,10 +10,12 @@ window.mimicopy.PlayerView = Osteoporosis.View.extend({
 		this._connectTimeText('currentTime');
 		this._connectTimeText('timeTo');
 		track.on('change:volume', this.onchangeTrackVolume.bind(this));
+		track.on('change:muted', this.onchangeTrackMuted.bind(this));
 
 		this.$('.js-play').on('click', this.onclickPlay.bind(this));
 		this.$('.js-pause').on('click', this.onclickPause.bind(this));
 		this.$volume = this.$('.js-volume').on('change', this.onchangeUiVolume.bind(this));
+		this.$muted = this.$('.js-muted').on('change', this.onchangeUiMuted.bind(this));
 
 		this.$('[disabled]').prop('disabled', false);  // FIXME
 
@@ -102,9 +104,17 @@ window.mimicopy.PlayerView = Osteoporosis.View.extend({
 		this.updateVolume();
 	},
 
+	onchangeTrackMuted: function(event) {
+		this.$muted.prop('checked', this.track.get('muted'));
+	},
+
 	onchangeUiVolume: function(event) {
 		var $volume = this.$volume;
 		var volume = $volume.val() / $volume.attr('max');
 		this.track.set({ volume:volume });
+	},
+
+	onchangeUiMuted: function(event) {
+		this.track.set({ muted:this.$muted.prop('checked') });
 	}
 });

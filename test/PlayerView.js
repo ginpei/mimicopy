@@ -131,5 +131,28 @@ describe('PlayerView', function() {
 				expect(track.get('volume')).toBe(0.25);
 			});
 		});
+
+		describe('muted', function() {
+			beforeEach(function() {
+				vPlayer.$('.js-mute').prop('checked', false);
+				track.set({ muted:true });
+			});
+
+			it('updates muted UI', function() {
+				expect(vPlayer.$('.js-muted').prop('checked')).toBe(true);
+			});
+		});
+
+		describe('muted UI', function() {
+			beforeEach(function() {
+				var $el = vPlayer.$('.js-muted');
+				$el.prop('checked', true);
+				test_helper_fireEvent($el[0], 'change');
+			});
+
+			it('updates muted value', function() {
+				expect(track.get('muted')).toBe(true);
+			});
+		});
 	});
 });

@@ -111,19 +111,20 @@ describe('Track', function() {
 
 		describe('volumechange', function() {
 			beforeEach(function() {
-				track.audio = { volume:100 };
+				track.audio = { volume:100, muted:true };
 				track.onvolumechange({ type:'volumechange' });
 			});
 
 			it('updates volume', function() {
 				expect(track.get('volume')).toBe(100);
+				expect(track.get('muted')).toBe(true);
 			});
 		});
 	});
 
 	describe('reflecting to the audio when model\'s value is changed', function() {
 		beforeEach(function() {
-			track.set({ currentTime:100, volume:0.123 });
+			track.set({ currentTime:100, volume:0.123, muted:true });
 		});
 
 		it('updates currentTime', function() {
@@ -132,6 +133,10 @@ describe('Track', function() {
 
 		it('updates volume', function() {
 			expect(track.audio.volume).toBe(0.123);
+		});
+
+		it('updates muted', function() {
+			expect(track.audio.muted).toBe(true);
 		});
 	});
 
