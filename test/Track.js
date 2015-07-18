@@ -91,6 +91,22 @@ describe('Track', function() {
 			it('updates currentTime', function() {
 				expect(track.get('currentTime')).toBe(100);
 			});
+
+			it('move to timeFrom if currentTime is earlier than timeFrom', function() {
+				track.set({ timeFrom:101 });
+				track.audio = { currentTime:100 };
+				track.ontimeupdate({ type:'timeupdate' });
+
+				expect(track.get('currentTime')).toBe(101);
+			});
+
+			it('move to timeFrom if currentTime is later than timeTo', function() {
+				track.set({ timeFrom:1, timeTo:99 });
+				track.audio = { currentTime:100 };
+				track.ontimeupdate({ type:'timeupdate' });
+
+				expect(track.get('currentTime')).toBe(1);
+			});
 		});
 
 		describe('volumechange', function() {

@@ -54,6 +54,7 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 		if ('currentTime' in attr || 'timeFrom' in attr || 'timeTo' in attr) {
 			this._currentTimeFilter(attr);
 		}
+		return attr;
 	},
 
 	_currentTimeFilter: function(attr) {
@@ -98,9 +99,7 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 	 * track <- audio
 	 */
 	ontimeupdate: function(event) {
-		this.set({
-			currentTime: this.audio.currentTime
-		});
+		this.set(this.beforeFilter({ currentTime:this.audio.currentTime }));
 	},
 
 	/**
