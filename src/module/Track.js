@@ -35,6 +35,8 @@ window.mimicopy.Track = Osteoporosis.Model.extend({
 			'ratechange',
 			'volumechange'
 		]);
+
+		this.onvolumechange(null);
 	},
 
 	/**

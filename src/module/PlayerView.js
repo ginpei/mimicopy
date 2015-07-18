@@ -16,6 +16,8 @@ window.mimicopy.PlayerView = Osteoporosis.View.extend({
 		this.$volume = this.$('.js-volume').on('change', this.onchangeUiVolume.bind(this));
 
 		this.$('[disabled]').prop('disabled', false);  // FIXME
+
+		this.updateVolume();
 	},
 
 	_setupTimeFrom: function(track) {
