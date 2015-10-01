@@ -16,7 +16,5 @@ test_helper_html =
 		'<div class="player-memories">' +
 			'<span class="js-timeFromText"></span>' +
 			'<span class="js-timeToText"></span>' +
-			'<button class="js-save" disabled>Save</button>' +
-			'<button class="js-load" disabled>Load</button>' +
 		'</div>' +
 	'</div>';
