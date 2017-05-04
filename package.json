@@ -4,6 +4,6 @@
     "test": "./node_modules/testem/testem.js --port 3000"
   },
   "dependencies": {
-    "testem": "~0.8.3"
+    "testem": "~1.16.1"
   }
 }
